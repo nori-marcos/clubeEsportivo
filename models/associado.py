@@ -14,7 +14,7 @@ class Associado:
 
     def save(self):
         sql = f"""
-        INSERT INTO members (id, cpf, name, email, telefone, plano)
+        INSERT INTO members (id, cpf, nome, email, telefone, plano)
         VALUES ('{self.id}', '{self.cpf}', '{self.nome}', '{self.email}', '{self.telefone}', '{self.plano}');
         """
         db.engine.execute(sql)
