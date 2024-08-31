@@ -66,17 +66,108 @@
                                     <td>{{ associado.plano }}</td>
                                     <td>{{ associado.status }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                                data-target="#editMemberModal">Detalhar
-                                        </button>
                                         <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                                                data-target="#editMemberModal">Editar
+                                                data-target="#editMemberModal{{ associado.id_associado }}"
+                                                data-id="{{ associado.id_associado }}"
+                                                data-cpf="{{ associado.cpf }}"
+                                                data-nome="{{ associado.nome }}"
+                                                data-data_nascimento="{{ associado.data_nascimento }}"
+                                                data-tipo="{{ associado.tipo }}"
+                                                data-endereco="{{ associado.endereco }}"
+                                                data-telefone="{{ associado.telefone }}"
+                                                data-email="{{ associado.email }}"
+                                                data-foto="{{ associado.foto }}"
+                                                data-plano="{{ associado.plano }}"
+                                                data-status="{{ associado.status }}">
+                                            Editar
                                         </button>
-                                        <button type="button" class="btn btn-danger btn-sm"
+                                        <button type="button"
+                                                class="btn btn-danger btn-sm"
                                                 onclick="return confirm('Você tem certeza que deseja deletar?')">Deletar
                                         </button>
                                     </td>
                                 </tr>
+
+                                <!-- Modal de edição para cada associado -->
+                                <div id="editMemberModal{{ associado.id_associado }}" class="modal fade" tabindex="-1"
+                                     role="dialog"
+                                     aria-labelledby="editMemberModalLabel{{ associado.id_associado }}"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title"
+                                                    id="editMemberModalLabel{{ associado.id_associado }}">Editar
+                                                    Associado</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Formulário para editar associado -->
+                                                <form action="{{ url_for('editar_associado', id_associado=associado.id_associado) }}"
+                                                      method="POST" enctype="multipart/form-data">
+                                                    <input type="hidden" name="id" value="{{ associado.id_associado }}">
+                                                    <div class="form-group">
+                                                        <label for="edit-cpf-{{ associado.id_associado }}">CPF:</label>
+                                                        <input id="edit-cpf-{{ associado.id_associado }}" type="text"
+                                                               class="form-control" name="cpf"
+                                                               value="{{ associado.cpf }}" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="edit-nome-{{ associado.id_associado }}">Nome:</label>
+                                                        <input id="edit-nome-{{ associado.id_associado }}" type="text"
+                                                               class="form-control" name="nome"
+                                                               value="{{ associado.nome }}" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="edit-email-{{ associado.id_associado }}">Email:</label>
+                                                        <input id="edit-email-{{ associado.id_associado }}" type="email"
+                                                               class="form-control" name="email"
+                                                               value="{{ associado.email }}" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="edit-telefone-{{ associado.id_associado }}">Telefone:</label>
+                                                        <input id="edit-telefone-{{ associado.id_associado }}"
+                                                               type="text" class="form-control" name="telefone"
+                                                               value="{{ associado.telefone }}" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="edit-plano-{{ associado.id_associado }}">Plano:</label>
+                                                        <select id="edit-plano-{{ associado.id_associado }}"
+                                                                class="form-control" name="plano" required>
+                                                            <option value="ouro"
+                                                                    {% if associado.plano == 'ouro' %}selected{% endif %}>
+                                                                Ouro
+                                                            </option>
+                                                            <option value="prata"
+                                                                    {% if associado.plano == 'prata' %}selected{% endif %}>
+                                                                Prata
+                                                            </option>
+                                                            <option value="bronze"
+                                                                    {% if associado.plano == 'bronze' %}selected{% endif %}>
+                                                                Bronze
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="edit-status-{{ associado.id_associado }}">Status:</label>
+                                                        <input id="edit-status-{{ associado.id_associado }}" type="text"
+                                                               class="form-control" name="status"
+                                                               value="{{ associado.status }}" required>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">Salvar</button>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Fechar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             {% endfor %}
                         </table>
                     </div>
@@ -176,17 +267,14 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        if (document.getElementById('flash-messages')) {
-            var collapseOne = document.getElementById('collapseOne');
-            collapseOne.classList.add('show');
-        }
-    });
 
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         var flashMessages = document.getElementById('flash-messages');
         if (flashMessages) {
+            var collapseOne = document.getElementById('collapseOne');
+            collapseOne.classList.add('show');
+
             var successMessage = document.querySelector('.alert-success');
             var errorMessage = document.querySelector('.alert-danger');
             var errorModal = document.getElementById('addMemberModal');

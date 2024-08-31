@@ -15,3 +15,8 @@ def index():
 @app.route('/inserir/associado', methods=['POST'])
 def inserir_associado():
     return associado_controller.inserir_associado()
+
+
+@app.route('/editar/associado/<id_associado>', methods=['POST'])
+def editar_associado(id_associado):
+    return associado_controller.editar_associado(id_associado)
