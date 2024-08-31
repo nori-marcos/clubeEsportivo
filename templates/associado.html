@@ -52,7 +52,6 @@
                                 <th>Nome</th>
                                 <th>Email</th>
                                 <th>Telefone</th>
-                                <th>Endereço</th>
                                 <th>Plano</th>
                                 <th>Status</th>
                                 <th>Ações</th>
@@ -64,14 +63,18 @@
                                     <td>{{ associado.nome }}</td>
                                     <td>{{ associado.email }}</td>
                                     <td>{{ associado.telefone }}</td>
-                                    <td>{{ associado.endereco }}</td>
                                     <td>{{ associado.plano }}</td>
                                     <td>{{ associado.status }}</td>
                                     <td>
-                                        <a class="btn btn-warning btn-xs" data-toggle="modal"
-                                           data-target="#editMemberModal">Editar</a>
-                                        <a class="btn btn-danger btn-xs"
-                                           onclick="return confirm('Você tem certeza que deseja deletar?')">Deletar</a>
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                                data-target="#editMemberModal">Detalhar
+                                        </button>
+                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                                data-target="#editMemberModal">Editar
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Você tem certeza que deseja deletar?')">Deletar
+                                        </button>
                                     </td>
                                 </tr>
                             {% endfor %}
