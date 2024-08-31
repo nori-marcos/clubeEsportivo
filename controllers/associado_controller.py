@@ -1,4 +1,4 @@
-from flask import request, redirect, url_for
+from flask import request, flash, render_template, redirect
 
 from models.associado import Associado
 
@@ -12,9 +12,11 @@ def inserir_associado():
         plano = request.form['plano']
 
         novo_associado = Associado(cpf=cpf, nome=nome, email=email, telefone=telefone, plano=plano)
+        sucesso, mensagem = novo_associado.save()
 
-        try:
-            novo_associado.save()
-            return redirect(url_for('index'))
-        except Exception as e:
-            return f"An error occurred: {e}"
+        if sucesso:
+            flash(mensagem, 'success')
+            return redirect('/')
+        else:
+            flash(mensagem, 'danger')
+            return redirect('/')
