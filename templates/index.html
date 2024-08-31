@@ -18,15 +18,15 @@
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1 class="display-4">CRUD</h1>
-            <p class="lead">This is an API to manage data from "Clube Esportivo".</p>
+            <p class="lead">Esta é uma API para realizar operações de criação, leitura, atualização e deleção de dados
+                do "Clube Esportivo".</p>
         </div>
     </div>
-    {% include 'member.html' %}
-
+    <div id="accordion">
+        {% include 'associado.html' %}
+        {% include 'pagamento.html' %}
+    </div>
 </div>
-
-</div>
-
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>

@@ -1,0 +1,142 @@
+<div id="accordion">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                        aria-controls="collapseOne">
+                    Associados
+                </button>
+            </h5>
+        </div>
+
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>
+                            Lista de Associados
+                            <button type="button" class="btn btn-success float-right" data-toggle="modal"
+                                    data-target="#addMemberModal">Adicionar Associado
+                            </button>
+                        </h2>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>CPF</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Endereço</th>
+                                <th>Plano</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                            <tr>
+                                <td>123.456.789-00</td>
+                                <td>João da Silva</td>
+                                <td>email@example.com</td>
+                                <td>123456789</td>
+                                <td>Endereço</td>
+                                <td>Ouro</td>
+                                <td>Ativo</td>
+                                <td>
+                                    <a class="btn btn-warning btn-xs" data-toggle="modal"
+                                       data-target="#editMemberModal">Editar</a>
+                                    <a class="btn btn-danger btn-xs"
+                                       onclick="return confirm('Você tem certeza que deseja deletar?')">Deletar</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Adicionar Associado -->
+<div id="addMemberModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addMemberModalLabel">Adicionar Associado</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulário para adicionar associado -->
+                <form action="" method="POST">
+                    <div class="form-group">
+                        <label>CPF:</label>
+                        <input type="text" class="form-control" name="cpf" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nome:</label>
+                        <input type="text" class="form-control" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone:</label>
+                        <input type="text" class="form-control" name="telefone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Plano:</label>
+                        <input type="text" class="form-control" name="plano" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Editar Associado -->
+<div id="editMemberModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editMemberModalLabel">Atualizar Informações</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulário para editar associado -->
+                <form action="" method="POST">
+                    <div class="form-group">
+                        <label>CPF:</label>
+                        <input type="hidden" name="id" value="">
+                        <input type="text" class="form-control" name="cpf" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nome:</label>
+                        <input type="hidden" name="id" value="">
+                        <input type="text" class="form-control" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone:</label>
+                        <input type="text" class="form-control" name="telefone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Plano:</label>
+                        <input type="text" class="form-control" name="plano" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Atualizar</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
