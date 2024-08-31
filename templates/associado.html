@@ -2,12 +2,21 @@
     {% if messages %}
         <div id="flash-messages">
             {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                {% if category == 'success' %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% elif category == 'danger' %}
+                    <div id="modal-error" class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
     {% endif %}
@@ -83,75 +92,36 @@
                 </button>
             </div>
             <div class="modal-body">
+                <div id="error-container"></div>
+
                 <!-- Formulário para adicionar associado -->
                 <form action="{{ url_for('inserir_associado') }}" method="POST">
                     <div class="form-group">
-                        <label>CPF:</label>
-                        <input type="text" class="form-control" name="cpf" required>
+                        <label for="cpf">CPF:</label>
+                        <input id="cpf" type="text" class="form-control" name="cpf"
+                               value="{{ form_data.get('cpf', '') }}" required>
                     </div>
                     <div class="form-group">
-                        <label>Nome:</label>
-                        <input type="text" class="form-control" name="nome" required>
+                        <label for="nome">Nome:</label>
+                        <input id="nome" type="text" class="form-control" name="nome"
+                               value="{{ form_data.get('nome', '') }}" required>
                     </div>
                     <div class="form-group">
-                        <label>Email:</label>
-                        <input type="email" class="form-control" name="email" required>
+                        <label for="email">Email:</label>
+                        <input id="email" type="email" class="form-control" name="email"
+                               value="{{ form_data.get('email', '') }}" required>
                     </div>
                     <div class="form-group">
-                        <label>Telefone:</label>
-                        <input type="text" class="form-control" name="telefone" required>
+                        <label for="telefone">Telefone:</label>
+                        <input id="telefone" type="text" class="form-control" name="telefone"
+                               value="{{ form_data.get('telefone', '') }}" required>
                     </div>
                     <div class="form-group">
-                        <label>Plano:</label>
-                        <input type="text" class="form-control" name="plano" required>
+                        <label for="plano">Plano:</label>
+                        <input id="plano" type="text" class="form-control" name="plano"
+                               value="{{ form_data.get('plano', '') }}" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Adicionar</button>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para Editar Associado -->
-<div id="editMemberModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editMemberModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="editMemberModalLabel">Atualizar Informações</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Formulário para editar associado -->
-                <form action="" method="POST">
-                    <div class="form-group">
-                        <label>CPF:</label>
-                        <input type="hidden" name="id" value="">
-                        <input type="text" class="form-control" name="cpf" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Nome:</label>
-                        <input type="hidden" name="id" value="">
-                        <input type="text" class="form-control" name="nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email:</label>
-                        <input type="email" class="form-control" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Telefone:</label>
-                        <input type="text" class="form-control" name="telefone" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Plano:</label>
-                        <input type="text" class="form-control" name="plano" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Atualizar</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -166,6 +136,28 @@
         if (document.getElementById('flash-messages')) {
             var collapseOne = document.getElementById('collapseOne');
             collapseOne.classList.add('show');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var flashMessages = document.getElementById('flash-messages');
+        if (flashMessages) {
+            var successMessage = document.querySelector('.alert-success');
+            var errorMessage = document.querySelector('.alert-danger');
+            var errorModal = document.getElementById('addMemberModal');
+            var errorContainer = document.getElementById('error-container');
+            var modalError = document.getElementById('modal-error');
+
+            if (successMessage) {
+                setTimeout(function () {
+                    $(errorModal).modal('hide');
+                }, 2000);
+            } else if (modalError) {
+                if (!errorContainer.contains(modalError)) {
+                    errorContainer.appendChild(modalError);
+                }
+                $(errorModal).modal('show');
+            }
         }
     });
 </script>

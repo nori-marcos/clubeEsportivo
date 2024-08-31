@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, session
 
 from app import app
 from controllers import associado_controller
@@ -6,7 +6,8 @@ from controllers import associado_controller
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    form_data = session.pop('form_data', {})
+    return render_template('index.html', form_data=form_data)
 
 
 @app.route('/inserir/associado', methods=['POST'])

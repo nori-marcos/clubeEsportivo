@@ -1,4 +1,4 @@
-from flask import request, flash, render_template, redirect
+from flask import request, flash, redirect, render_template, session
 
 from models.associado import Associado
 
@@ -16,7 +16,15 @@ def inserir_associado():
 
         if sucesso:
             flash(mensagem, 'success')
+            session.pop('form_data', None)
             return redirect('/')
         else:
+            session['form_data'] = {
+                'cpf': cpf,
+                'nome': nome,
+                'email': email,
+                'telefone': telefone,
+                'plano': plano
+            }
             flash(mensagem, 'danger')
             return redirect('/')
