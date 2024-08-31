@@ -8,7 +8,7 @@ from gateway.associado_gateway import AssociadoGateway
 @app.route('/')
 def index():
     form_data = session.pop('form_data', {})
-    associados = AssociadoGateway.listar_associados()
+    associados = AssociadoGateway.listar()
     return render_template('index.html', form_data=form_data, associados=associados)
 
 

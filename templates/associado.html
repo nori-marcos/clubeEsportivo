@@ -122,17 +122,49 @@
                                                                value="{{ associado.nome }}" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="edit-email-{{ associado.id_associado }}">Email:</label>
-                                                        <input id="edit-email-{{ associado.id_associado }}" type="email"
-                                                               class="form-control" name="email"
-                                                               value="{{ associado.email }}" required>
+                                                        <label for="edit-data_nascimento-{{ associado.id_associado }}">Data
+                                                            de Nascimento:</label>
+                                                        <input id="edit-data_nascimento-{{ associado.id_associado }}"
+                                                               type="date" class="form-control" name="data_nascimento"
+                                                               value="{{ associado.data_nascimento }}" required>
                                                     </div>
+
+                                                    <div class="form-group">
+                                                        <label for="tipo">Tipo:</label>
+                                                        <select id="tipo" class="form-control" name="tipo" required>
+                                                            <option value="titular"
+                                                                    {% if associado.tipo == 'titular' %}selected{% endif %}>
+                                                                Titular
+                                                            </option>
+                                                            <option value="dependente"
+                                                                    {% if associado.tipo == 'dependente' %}selected{% endif %}>
+                                                                Dependente
+                                                            </option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="edit-endereco-{{ associado.id_associado }}">Endereço:</label>
+                                                        <input id="edit-endereco-{{ associado.id_associado }}"
+                                                               type="text"
+                                                               class="form-control" name="endereco"
+                                                               value="{{ associado.endereco }}" required>
+                                                    </div>
+
                                                     <div class="form-group">
                                                         <label for="edit-telefone-{{ associado.id_associado }}">Telefone:</label>
                                                         <input id="edit-telefone-{{ associado.id_associado }}"
                                                                type="text" class="form-control" name="telefone"
                                                                value="{{ associado.telefone }}" required>
                                                     </div>
+
+                                                    <div class="form-group">
+                                                        <label for="edit-email-{{ associado.id_associado }}">Email:</label>
+                                                        <input id="edit-email-{{ associado.id_associado }}" type="email"
+                                                               class="form-control" name="email"
+                                                               value="{{ associado.email }}" required>
+                                                    </div>
+
                                                     <div class="form-group">
                                                         <label for="edit-plano-{{ associado.id_associado }}">Plano:</label>
                                                         <select id="edit-plano-{{ associado.id_associado }}"
@@ -150,12 +182,6 @@
                                                                 Bronze
                                                             </option>
                                                         </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="edit-status-{{ associado.id_associado }}">Status:</label>
-                                                        <input id="edit-status-{{ associado.id_associado }}" type="text"
-                                                               class="form-control" name="status"
-                                                               value="{{ associado.status }}" required>
                                                     </div>
                                                     <button type="submit" class="btn btn-primary">Salvar</button>
                                                 </form>

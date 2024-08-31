@@ -8,7 +8,7 @@ def inserir_associado():
     try:
         associado = obter_dados_formulario_associado()
         sucesso, mensagem = AssociadoGateway.salvar(associado)
-        return lidar_com_salvamento_associado(sucesso, mensagem)
+        return tratar_salvamento(sucesso, mensagem)
     except Exception as e:
         flash(f'Ocorreu um erro ao adicionar o associado: {e}', 'danger')
         return redirect(url_for('index'))
@@ -17,14 +17,15 @@ def inserir_associado():
 def editar_associado(id_associado):
     try:
         associado = obter_dados_formulario_associado(id_associado)
-        sucesso, mensagem = AssociadoGateway.atualizar(associado)
-        return lidar_com_salvamento_associado(sucesso, mensagem)
+        sucesso, mensagem = AssociadoGateway.editar(associado)
+        return tratar_salvamento(sucesso, mensagem)
     except Exception as e:
         flash(f'Ocorreu um erro ao atualizar o associado: {e}', 'danger')
+        session['modal_error_id'] = str(id_associado)
         return redirect(url_for('index'))
 
 
-def lidar_com_salvamento_associado(sucesso, mensagem):
+def tratar_salvamento(sucesso, mensagem):
     if sucesso:
         flash(mensagem, 'success')
         session.pop('form_data', None)

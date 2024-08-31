@@ -68,7 +68,7 @@ class AssociadoGateway:
             return False, f"Erro inesperado: {e}"
 
     @staticmethod
-    def listar_associados():
+    def listar():
         sql = text("""
         SELECT "ID_Associado", "Cpf", "Nome", "Data_Nascimento", "Endereco", "Telefone", "Email", "Tipo", "Plano", "Foto", "Data_Adesao" 
         FROM "Associados"
@@ -92,3 +92,36 @@ class AssociadoGateway:
             )
             associados.append(associado)
         return associados
+
+    @staticmethod
+    def editar(associado):
+        try:
+            sql = text("""
+            UPDATE "Associados"
+            SET "Cpf" = :Cpf, "Nome" = :Nome, "Data_Nascimento" = :Data_Nascimento, "Endereco" = :Endereco, "Telefone" = :Telefone, "Email" = :Email, "Tipo" = :Tipo, "Plano" = :Plano, "Foto" = :Foto, "Data_Adesao" = :Data_Adesao
+            WHERE "ID_Associado" = :ID_Associado
+            """)
+
+            session.execute(sql, {
+                'ID_Associado': associado.id_associado,
+                'Cpf': associado.cpf,
+                'Nome': associado.nome,
+                'Data_Nascimento': associado.data_nascimento,
+                'Endereco': associado.endereco,
+                'Telefone': associado.telefone,
+                'Email': associado.email,
+                'Tipo': associado.tipo,
+                'Foto': associado.foto,
+                'Data_Adesao': associado.data_adesao,
+                'Plano': associado.plano
+            })
+            session.commit()
+            return True, "Associado atualizado com sucesso!"
+        except IntegrityError as e:
+            session.rollback()
+            if isinstance(e.orig, psycopg2.errors.UniqueViolation):
+                return False, f"Erro de duplicidade: {e.orig}"
+            return False, f"Ocorreu um erro: {e}"
+        except Exception as e:
+            session.rollback()
+            return False, f"Erro inesperado: {e}"
