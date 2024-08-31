@@ -57,21 +57,24 @@
                                 <th>Status</th>
                                 <th>Ações</th>
                             </tr>
-                            <tr>
-                                <td>123.456.789-00</td>
-                                <td>João da Silva</td>
-                                <td>email@example.com</td>
-                                <td>123456789</td>
-                                <td>Endereço</td>
-                                <td>Ouro</td>
-                                <td>Ativo</td>
-                                <td>
-                                    <a class="btn btn-warning btn-xs" data-toggle="modal"
-                                       data-target="#editMemberModal">Editar</a>
-                                    <a class="btn btn-danger btn-xs"
-                                       onclick="return confirm('Você tem certeza que deseja deletar?')">Deletar</a>
-                                </td>
-                            </tr>
+
+                            {% for associado in associados %}
+                                <tr>
+                                    <td>{{ associado.cpf }}</td>
+                                    <td>{{ associado.nome }}</td>
+                                    <td>{{ associado.email }}</td>
+                                    <td>{{ associado.telefone }}</td>
+                                    <td>{{ associado.endereco }}</td>
+                                    <td>{{ associado.plano }}</td>
+                                    <td>{{ associado.status }}</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-xs" data-toggle="modal"
+                                           data-target="#editMemberModal">Editar</a>
+                                        <a class="btn btn-danger btn-xs"
+                                           onclick="return confirm('Você tem certeza que deseja deletar?')">Deletar</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
                         </table>
                     </div>
                 </div>
@@ -95,7 +98,7 @@
                 <div id="error-container"></div>
 
                 <!-- Formulário para adicionar associado -->
-                <form action="{{ url_for('inserir_associado') }}" method="POST">
+                <form action="{{ url_for('inserir_associado') }}" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="cpf">CPF:</label>
                         <input id="cpf" type="text" class="form-control" name="cpf"
@@ -106,20 +109,59 @@
                         <input id="nome" type="text" class="form-control" name="nome"
                                value="{{ form_data.get('nome', '') }}" required>
                     </div>
+
                     <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input id="email" type="email" class="form-control" name="email"
-                               value="{{ form_data.get('email', '') }}" required>
+                        <label for="data_nascimento">Data de Nascimento:</label>
+                        <input id="data_nascimento" type="date" class="form-control" name="data_nascimento"
+                               value="{{ form_data.get('data_nascimento', '') }}" required>
                     </div>
+
+                    <div class="form-group">
+                        <label for="tipo">Tipo:</label>
+                        <select id="tipo" class="form-control" name="tipo" required>
+                            <option value="titular" {% if form_data.get('tipo') == 'titular' %}selected{% endif %}>
+                                Titular
+                            </option>
+                            <option value="dependente"
+                                    {% if form_data.get('tipo') == 'dependente' %}selected{% endif %}>Dependente
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endereco">Endereço:</label>
+                        <input id="endereco" type="text" class="form-control" name="endereco"
+                               value="{{ form_data.get('endereco', '') }}" required>
+                    </div>
+
                     <div class="form-group">
                         <label for="telefone">Telefone:</label>
                         <input id="telefone" type="text" class="form-control" name="telefone"
                                value="{{ form_data.get('telefone', '') }}" required>
                     </div>
+
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input id="email" type="email" class="form-control" name="email"
+                               value="{{ form_data.get('email', '') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="foto">Foto:</label>
+                        <input id="foto" type="file" class="form-control" name="foto">
+                    </div>
+
                     <div class="form-group">
                         <label for="plano">Plano:</label>
-                        <input id="plano" type="text" class="form-control" name="plano"
-                               value="{{ form_data.get('plano', '') }}" required>
+                        <select id="plano" class="form-control" name="plano" required>
+                            <option value="ouro" {% if form_data.get('plano') == 'ouro' %}selected{% endif %}>Ouro
+                            </option>
+                            <option value="prata" {% if form_data.get('plano') == 'prata' %}selected{% endif %}>Prata
+                            </option>
+                            <option value="bronze" {% if form_data.get('plano') == 'bronze' %}selected{% endif %}>
+                                Bronze
+                            </option>
+                        </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Adicionar</button>
                 </form>
