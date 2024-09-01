@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import render_template, session, request, flash, redirect, url_for
 
 from app import app
@@ -9,12 +11,13 @@ from gateway.associado_gateway import AssociadoGateway
 def index():
     form_data = session.pop('form_data', {})
     associados = AssociadoGateway.listar()
+    today = datetime.today()
 
     erro = request.args.get('error')
     if erro:
         flash(erro, 'danger')
 
-    return render_template('index.html', form_data=form_data, associados=associados)
+    return render_template('index.html', form_data=form_data, associados=associados, today=today)
 
 
 @app.route('/inserir/associado', methods=['POST'])

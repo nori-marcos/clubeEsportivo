@@ -1,5 +1,4 @@
 import uuid
-from datetime import datetime
 
 from flask import request
 
@@ -17,6 +16,7 @@ def obter_dados_formulario_associado(id_associado=None):
     email = request.form['email']
     plano = request.form['plano']
     foto = processar_foto(request.files.get('foto'))
+    data_adesao = request.form['data_adesao']
 
     Associado.validar_cpf(cpf)
 
@@ -31,5 +31,5 @@ def obter_dados_formulario_associado(id_associado=None):
         email=email,
         plano=plano,
         foto=foto,
-        data_adesao=datetime.today()
+        data_adesao=data_adesao
     )
