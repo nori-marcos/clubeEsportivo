@@ -61,7 +61,7 @@ class AssociadoGateway:
             if isinstance(e.orig, psycopg2.errors.NotNullViolation):
                 return False, f"Erro de valor nulo: {e.orig}"
 
-            return False, f"Ocorreu um erro: {e}"
+            return False, f"Ocorreu um erro: {e.orig}"
 
         except Exception as e:
             session.rollback()

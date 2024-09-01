@@ -8,7 +8,7 @@ class Associado:
         self.cpf = cpf
         self.nome = self.validar_nome(nome)
         self.email = email
-        self.telefone = telefone
+        self.telefone = self.validar_telefone(telefone)
         self.tipo = self.validar_tipo(tipo)
         self.plano = self.validar_plano(plano)
         self.data_nascimento = data_nascimento
@@ -46,3 +46,9 @@ class Associado:
         if not data_adesao:
             raise ValueError("Data de Adesão é obrigatória")
         return data_adesao
+
+    @staticmethod
+    def validar_telefone(telefone):
+        if len(telefone) > 15:
+            raise ValueError("Telefone inválido: deve conter até 15 caracteres")
+        return telefone
