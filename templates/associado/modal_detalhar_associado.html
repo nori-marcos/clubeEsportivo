@@ -1,0 +1,61 @@
+<!-- Modal para Detalhar Associado -->
+<div id="viewMemberModal{{ associado.id_associado }}" class="modal fade" tabindex="-1"
+     role="dialog"
+     aria-labelledby="viewMemberModalLabel{{ associado.id_associado }}"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"
+                    id="viewMemberModalLabel{{ associado.id_associado }}">Detalhes do Associado</h4>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>CPF:</label>
+                    <p>{{ associado.cpf }}</p>
+                </div>
+                <div class="form-group">
+                    <label>Nome:</label>
+                    <p>{{ associado.nome }}</p>
+                </div>
+                <div class="form-group">
+                    <label>Data de Nascimento:</label>
+                    <p>{{ associado.data_nascimento }}</p>
+                </div>
+                <div class="form-group">
+                    <label>Tipo:</label>
+                    <p>{{ associado.tipo }}</p>
+                </div>
+                <div class="form-group">
+                    <label>Plano:</label>
+                    <p>{{ associado.plano }}</p>
+                </div>
+                <div class="form-group">
+                    <label>Endereço:</label>
+                    <p>{{ associado.endereco }}</p>
+                </div>
+                <div class="form-group">
+                    <label>Telefone:</label>
+                    <p>{{ associado.telefone }}</p>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <p>{{ associado.email }}</p>
+                </div>
+                <div class="form-group">
+                    <label>Data de Adesão:</label>
+                    <p>{{ associado.data_adesao }}</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

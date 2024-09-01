@@ -69,6 +69,10 @@
                                     <td>{{ associado.plano }}</td>
                                     <td>{{ associado.status }}</td>
                                     <td>
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                                data-target="#viewMemberModal{{ associado.id_associado }}">
+                                            Detalhar
+                                        </button>
                                         <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
                                                 data-target="#editMemberModal{{ associado.id_associado }}"
                                                 data-id="{{ associado.id_associado }}">
@@ -84,6 +88,7 @@
                                         </form>
                                     </td>
                                 </tr>
+                                {% include 'associado/modal_detalhar_associado.html' %}
                                 {% include 'associado/modal_editar_associado.html' %}
                             {% endfor %}
                             </tbody>
