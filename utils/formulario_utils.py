@@ -15,8 +15,9 @@ def obter_dados_formulario_associado(id_associado=None):
     telefone = request.form['telefone']
     email = request.form['email']
     plano = request.form['plano']
-    foto = processar_foto(request.files.get('foto'))
     data_adesao = request.form['data_adesao']
+
+    foto = processar_foto(request.files['foto']) if 'foto' in request.files else request.form['foto-atual']
 
     Associado.validar_cpf(cpf)
 

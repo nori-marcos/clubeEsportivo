@@ -94,8 +94,16 @@
                                value="{{ associado.email }}" required>
                     </div>
 
+                    <div class="form-group">
+                        <label for="foto">Deseja mudar de foto?</label>
+                        <input id="foto" type="file" class="form-control" name="foto">
+                    </div>
+
                     <input id="data_adesao" type="hidden" class="form-control" name="data_adesao"
                            value="{{ associado.data_adesao }}" required>
+
+                    <input id="foto-atual" type="hidden" class="form-control" name="foto-atual"
+                           value="{{ associado.foto }}">
 
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </form>

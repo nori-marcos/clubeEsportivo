@@ -19,13 +19,24 @@
                              alt="Foto do associado">
                     {% endif %}
                     <div class="card-body">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {% if associado.plano == 'ouro' %}
+                                🥇 Você é nosso associado ouro!
+                            {% elif associado.plano == 'prata' %}
+                                🥈 Você é nosso associado prata!
+                            {% elif associado.plano == 'bronze' %}
+                                🥉 Você é nosso associado bronze!
+                            {% endif %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
                         <h5 class="card-title">{{ associado.nome }}</h5>
                         <p class="card-text"><strong>CPF:</strong> {{ associado.cpf }}</p>
                         <p class="card-text"><strong>Email:</strong> {{ associado.email }}</p>
                         <p class="card-text"><strong>Telefone:</strong> {{ associado.telefone }}</p>
                         <p class="card-text"><strong>Data de Nascimento:</strong> {{ associado.data_nascimento }}</p>
                         <p class="card-text"><strong>Tipo:</strong> {{ associado.tipo }}</p>
-                        <p class="card-text"><strong>Plano:</strong> {{ associado.plano }}</p>
                         <p class="card-text"><strong>Endereço:</strong> {{ associado.endereco }}</p>
                         <p class="card-text"><strong>Data de Adesão:</strong> {{ associado.data_adesao }}</p>
                         <p class="card-text"><strong>Status:</strong> {{ associado.status }}</p>
