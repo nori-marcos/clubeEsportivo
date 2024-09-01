@@ -7,6 +7,7 @@ from src.utils.arquivo_utils import processar_foto
 
 
 def obter_dados_formulario_associado(id_associado=None):
+    id_associado = id_associado if id_associado else uuid.uuid4()
     cpf = request.form['cpf']
     nome = request.form['nome']
     data_nascimento = request.form['data_nascimento']
@@ -25,10 +26,8 @@ def obter_dados_formulario_associado(id_associado=None):
         except KeyError:
             foto = None
 
-    Associado.validar_cpf(cpf)
-
     return Associado(
-        id_associado=id_associado if id_associado else uuid.uuid4(),
+        id_associado=id_associado,
         cpf=cpf,
         nome=nome,
         data_nascimento=data_nascimento,

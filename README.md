@@ -7,7 +7,7 @@ python3 -m venv .venv-clube
 pip install -r requirements.txt
 ```
 ```
-flask run
+flask --app src run
 ```
 # Modelo Entidade Relacionamento (MER)
 ![ER Model](diagrams/mer_clube.drawio.svg)

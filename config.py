@@ -1,7 +1,12 @@
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-POSTGRES_DATABASE_URI = 'postgresql+psycopg2://postgres:password@localhost:5432/db_clube_esportivo'
+DB_ACCOUNT = os.getenv('DB_ACCOUNT', 'clube_dba')
+DB_PASSWORD = os.getenv('DB_PASSWORD', '1234567')
+DB_URL = os.getenv('DB_URL', 'localhost:5432')
+DB_NAME = os.getenv('DB_NAME', 'db_clube_esportivo')
+POSTGRES_DATABASE_URI = os.getenv('POSTGRES_DATABASE_URI',
+                                  f'postgresql+psycopg2://{DB_ACCOUNT}:{DB_PASSWORD}@{DB_URL}/{DB_NAME}')
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'secret_key')
@@ -9,4 +14,3 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     FLASK_ENV = os.getenv('FLASK_ENV', 'development')
-    FLASK_APP = os.getenv('FLASK_APP', 'src')
