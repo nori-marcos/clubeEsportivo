@@ -17,7 +17,9 @@ def obter_dados_formulario_associado(id_associado=None):
     plano = request.form['plano']
     data_adesao = request.form['data_adesao']
 
-    foto = processar_foto(request.files['foto']) if 'foto' in request.files else request.form['foto-atual']
+    foto = processar_foto(request.files['foto'])
+    if foto is None:
+        foto = request.form['foto-atual']
 
     Associado.validar_cpf(cpf)
 
