@@ -4,7 +4,7 @@ import psycopg2
 from sqlalchemy import text, Table, Column, String, Date, MetaData, UUID, Text
 from sqlalchemy.exc import IntegrityError
 
-from app import session, engine
+from config.sql_config import sql_session, engine
 from models.associado import Associado
 
 
@@ -35,7 +35,7 @@ class AssociadoGateway:
             RETURNING "ID_Associado"
             """)
 
-            result = session.execute(sql, {
+            result = sql_session.execute(sql, {
                 'ID_Associado': associado.id_associado,
                 'Cpf': associado.cpf,
                 'Nome': associado.nome,
@@ -48,13 +48,13 @@ class AssociadoGateway:
                 'Data_Adesao': associado.data_adesao,
                 'Plano': associado.plano
             })
-            session.commit()
+            sql_session.commit()
 
             associado.id_associado = result.scalar()
 
             return True, "Associado inserido com sucesso!"
         except IntegrityError as e:
-            session.rollback()
+            sql_session.rollback()
             if isinstance(e.orig, psycopg2.errors.UniqueViolation):
                 return False, f"Erro de duplicidade: {e.orig}"
 
@@ -64,7 +64,7 @@ class AssociadoGateway:
             return False, f"Ocorreu um erro: {e.orig}"
 
         except Exception as e:
-            session.rollback()
+            sql_session.rollback()
             return False, f"Erro inesperado: {e}"
 
     @staticmethod
@@ -74,7 +74,7 @@ class AssociadoGateway:
         FROM "Associados"
         """)
 
-        result = session.execute(sql)
+        result = sql_session.execute(sql)
         associados = []
         for row in result.mappings():
             associado = Associado(
@@ -102,7 +102,7 @@ class AssociadoGateway:
             WHERE "ID_Associado" = :ID_Associado
             """)
 
-            session.execute(sql, {
+            sql_session.execute(sql, {
                 'ID_Associado': associado.id_associado,
                 'Cpf': associado.cpf,
                 'Nome': associado.nome,
@@ -115,15 +115,15 @@ class AssociadoGateway:
                 'Data_Adesao': associado.data_adesao,
                 'Plano': associado.plano
             })
-            session.commit()
+            sql_session.commit()
             return True, "Associado atualizado com sucesso!"
         except IntegrityError as e:
-            session.rollback()
+            sql_session.rollback()
             if isinstance(e.orig, psycopg2.errors.UniqueViolation):
                 return False, f"Erro de duplicidade: {e.orig}"
             return False, f"Ocorreu um erro: {e}"
         except Exception as e:
-            session.rollback()
+            sql_session.rollback()
             return False, f"Erro inesperado: {e}"
 
     @staticmethod
@@ -134,11 +134,11 @@ class AssociadoGateway:
             WHERE "ID_Associado" = :ID_Associado
             """)
 
-            session.execute(sql, {
+            sql_session.execute(sql, {
                 'ID_Associado': id_associado
             })
-            session.commit()
+            sql_session.commit()
             return True, "Associado removido com sucesso!"
         except Exception as e:
-            session.rollback()
+            sql_session.rollback()
             return False, f"Erro inesperado: {e}"
