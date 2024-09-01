@@ -125,3 +125,20 @@ class AssociadoGateway:
         except Exception as e:
             session.rollback()
             return False, f"Erro inesperado: {e}"
+
+    @staticmethod
+    def remover(id_associado):
+        try:
+            sql = text("""
+            DELETE FROM "Associados"
+            WHERE "ID_Associado" = :ID_Associado
+            """)
+
+            session.execute(sql, {
+                'ID_Associado': id_associado
+            })
+            session.commit()
+            return True, "Associado removido com sucesso!"
+        except Exception as e:
+            session.rollback()
+            return False, f"Erro inesperado: {e}"

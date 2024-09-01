@@ -44,3 +44,12 @@ def editar_associado(id_associado):
     except Exception as e:
         flash(f'Ocorreu um erro ao atualizar o associado: {e}', 'danger-edit')
         return redirect(url_for('index'))
+
+
+def remover_associado(id_associado):
+    sucesso, mensagem = AssociadoGateway.remover(id_associado)
+    if sucesso:
+        flash(mensagem, 'success')
+    else:
+        flash(mensagem, 'danger-remove')
+    return redirect(url_for('index'))

@@ -18,10 +18,10 @@ class Associado:
 
     @staticmethod
     def validar_cpf(cpf):
-        pattern = r'^\d{3}\.\d{3}\.\d{3}\-\d{2}$'
-        if not re.match(pattern, cpf):
-            raise ValueError("CPF inválido")
-        return cpf
+        cpf_numeros = re.sub(r'\D', '', cpf)
+        if len(cpf_numeros) != 11:
+            raise ValueError("CPF inválido: deve conter 11 dígitos numéricos")
+        return cpf_numeros
 
     @staticmethod
     def validar_nome(nome):

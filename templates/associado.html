@@ -64,10 +64,14 @@
                                                 data-id="{{ associado.id_associado }}">
                                             Editar
                                         </button>
-                                        <button type="button"
-                                                class="btn btn-danger btn-sm"
-                                                onclick="return confirm('Você tem certeza que deseja deletar?')">Deletar
-                                        </button>
+                                        <form action="{{ url_for('remover_associado', id_associado=associado.id_associado) }}"
+                                              method="POST" style="display:inline;">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="btn btn-danger btn-xs"
+                                                    onclick="return confirm('Você tem certeza que deseja deletar?')">
+                                                Deletar
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
 
@@ -283,6 +287,7 @@
             var successMessage = document.querySelector('.alert-success');
             var errorMessageToInsert = document.querySelector('.alert-danger-insert');
             var errorMessageToEdit = document.querySelector('.alert-danger-edit');
+            var errorMessageToDelete = document.querySelector('.alert-danger-remove');
             var flashContainer = document.getElementById('flash-container');
 
             function ajustarClassesMensagens() {
@@ -322,6 +327,12 @@
 
             if (errorMessageToEdit) {
                 $('.modal').modal('hide');
+                flashContainer.innerHTML = flashMessages.innerHTML;
+                ajustarClassesMensagens();
+                manterAccordionAberto();
+            }
+
+            if (errorMessageToDelete) {
                 flashContainer.innerHTML = flashMessages.innerHTML;
                 ajustarClassesMensagens();
                 manterAccordionAberto();
