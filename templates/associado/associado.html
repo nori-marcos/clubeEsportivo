@@ -1,0 +1,90 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div id="flash-messages">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<div id="flash-container"></div>
+
+<!-- Card com os Dados dos Associados -->
+<div id="accordion">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                        aria-controls="collapseOne">
+                    Associados
+                </button>
+            </h5>
+        </div>
+
+        <!-- Verificação para manter o accordion aberto -->
+        <div id="collapseOne" class="accordion-collapse collapse {% if messages %}show{% endif %}"
+             aria-labelledby="headingOne">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>
+                            Lista de Associados
+                            <button type="button" class="btn btn-success float-right" data-toggle="modal"
+                                    data-target="#addMemberModal">Adicionar Associado
+                            </button>
+                        </h2>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>CPF</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Data de Adesão</th>
+                                <th>Plano</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+
+                            {% for associado in associados %}
+                                <tr>
+                                    <td>{{ associado.cpf }}</td>
+                                    <td>{{ associado.nome }}</td>
+                                    <td>{{ associado.email }}</td>
+                                    <td>{{ associado.telefone }}</td>
+                                    <td>{{ associado.data_adesao }}</td>
+                                    <td>{{ associado.plano }}</td>
+                                    <td>{{ associado.status }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                                data-target="#editMemberModal{{ associado.id_associado }}"
+                                                data-id="{{ associado.id_associado }}">
+                                            Editar
+                                        </button>
+                                        <form action="{{ url_for('remover_associado', id_associado=associado.id_associado) }}"
+                                              method="POST" style="display:inline;">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="btn btn-danger btn-xs"
+                                                    onclick="return confirm('Você tem certeza que deseja deletar?')">
+                                                Deletar
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% include 'associado/modal_editar_associado.html' %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'associado/modal_adicionar_associado.html' %}
+
+

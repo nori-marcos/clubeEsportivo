@@ -1,0 +1,90 @@
+<!-- Modal para Adicionar Associado -->
+<div id="addMemberModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addMemberModalLabel">Adicionar Associado</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="error-container-add"></div>
+
+                <!-- Formulário para adicionar associado -->
+                <form action="{{ url_for('inserir_associado') }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="cpf">CPF:</label>
+                        <input id="cpf" type="text" class="form-control" name="cpf"
+                               value="{{ form_data.get('cpf', '') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nome">Nome:</label>
+                        <input id="nome" type="text" class="form-control" name="nome"
+                               value="{{ form_data.get('nome', '') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data_nascimento">Data de Nascimento:</label>
+                        <input id="data_nascimento" type="date" class="form-control" name="data_nascimento"
+                               value="{{ form_data.get('data_nascimento', '') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipo">Tipo:</label>
+                        <select id="tipo" class="form-control" name="tipo" required>
+                            <option value="titular" {% if form_data.get('tipo') == 'titular' %}selected{% endif %}>
+                                Titular
+                            </option>
+                            <option value="dependente"
+                                    {% if form_data.get('tipo') == 'dependente' %}selected{% endif %}>Dependente
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="plano">Plano:</label>
+                        <select id="plano" class="form-control" name="plano" required>
+                            <option value="ouro" {% if form_data.get('plano') == 'ouro' %}selected{% endif %}>Ouro
+                            </option>
+                            <option value="prata" {% if form_data.get('plano') == 'prata' %}selected{% endif %}>Prata
+                            </option>
+                            <option value="bronze" {% if form_data.get('plano') == 'bronze' %}selected{% endif %}>
+                                Bronze
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endereco">Endereço:</label>
+                        <input id="endereco" type="text" class="form-control" name="endereco"
+                               value="{{ form_data.get('endereco', '') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefone">Telefone:</label>
+                        <input id="telefone" type="text" class="form-control" name="telefone"
+                               value="{{ form_data.get('telefone', '') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input id="email" type="email" class="form-control" name="email"
+                               value="{{ form_data.get('email', '') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="foto">Foto:</label>
+                        <input id="foto" type="file" class="form-control" name="foto">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
