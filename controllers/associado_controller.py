@@ -3,6 +3,17 @@ from flask import request, flash, redirect, url_for, session
 from gateway.associado_gateway import AssociadoGateway
 from utils.formulario_utils import obter_dados_formulario_associado
 
+def salvar_dados_formulario_na_sessao():
+    session['form_data'] = {
+        'cpf': request.form['cpf'],
+        'nome': request.form['nome'],
+        'data_nascimento': request.form['data_nascimento'],
+        'tipo': request.form['tipo'],
+        'endereco': request.form['endereco'],
+        'telefone': request.form['telefone'],
+        'email': request.form['email'],
+        'plano': request.form['plano']
+    }
 
 def inserir_associado():
     try:
@@ -13,19 +24,11 @@ def inserir_associado():
             session.pop('form_data', None)
             return redirect('/')
         else:
+            salvar_dados_formulario_na_sessao()
             flash(mensagem, 'danger-insert')
             return redirect(url_for('index'))
     except Exception as e:
-        session['form_data'] = {
-            'cpf': request.form['cpf'],
-            'nome': request.form['nome'],
-            'data_nascimento': request.form['data_nascimento'],
-            'tipo': request.form['tipo'],
-            'endereco': request.form['endereco'],
-            'telefone': request.form['telefone'],
-            'email': request.form['email'],
-            'plano': request.form['plano']
-        }
+        salvar_dados_formulario_na_sessao()
         flash(f'Ocorreu um erro ao adicionar o associado: {e}', 'danger-insert')
         return redirect(url_for('index'))
 

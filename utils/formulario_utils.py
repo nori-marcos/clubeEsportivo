@@ -18,8 +18,12 @@ def obter_dados_formulario_associado(id_associado=None):
     data_adesao = request.form['data_adesao']
 
     foto = processar_foto(request.files['foto'])
+
     if foto is None:
-        foto = request.form['foto-atual']
+        try:
+            foto = request.form['foto-atual']
+        except KeyError:
+            foto = None
 
     Associado.validar_cpf(cpf)
 
