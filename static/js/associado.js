@@ -59,12 +59,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('.telefone-mask').forEach(function (telefoneInput) {
         telefoneInput.addEventListener('input', function (event) {
-            let input = event.target.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
-            input = input.substring(0, 11); // Limita a entrada a 11 dígitos
+            let input = event.target.value.replace(/\D/g, '');
+            input = input.substring(0, 11);
 
-            const parte1 = input.substring(0, 2); // DDD
-            const parte2 = input.substring(2, 7); // Primeira parte do telefone
-            const parte3 = input.substring(7, 11); // Segunda parte do telefone
+            const parte1 = input.substring(0, 2);
+            const parte2 = input.substring(2, 7);
+            const parte3 = input.substring(7, 11);
 
             if (input.length > 7) {
                 event.target.value = `(${parte1}) ${parte2}-${parte3}`;
@@ -76,4 +76,25 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    document.querySelectorAll('.cpf-mask').forEach(function (cpfInput) {
+        cpfInput.addEventListener('input', function (event) {
+            let input = event.target.value.replace(/\D/g, '');
+            input = input.substring(0, 11);
+
+            const parte1 = input.substring(0, 3);
+            const parte2 = input.substring(3, 6);
+            const parte3 = input.substring(6, 9);
+            const parte4 = input.substring(9, 11);
+
+            if (input.length > 9) {
+                event.target.value = `${parte1}.${parte2}.${parte3}-${parte4}`;
+            } else if (input.length > 6) {
+                event.target.value = `${parte1}.${parte2}.${parte3}`;
+            } else if (input.length > 3) {
+                event.target.value = `${parte1}.${parte2}`;
+            } else if (input.length > 0) {
+                event.target.value = `${parte1}`;
+            }
+        });
+    });
 });
