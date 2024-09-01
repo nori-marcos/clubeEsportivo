@@ -1,75 +1,59 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var flashMessages = document.getElementById('flash-messages');
+    const flashMessages = document.getElementById('flash-messages');
+    const flashContainer = document.getElementById('flash-container');
+
     if (flashMessages) {
-        var successMessage = document.querySelector('.alert-success');
-        var errorMessageToInsert = document.querySelector('.alert-danger-insert');
-        var errorMessageToEdit = document.querySelector('.alert-danger-edit');
-        var errorMessageToDelete = document.querySelector('.alert-danger-remove');
-        var flashContainer = document.getElementById('flash-container');
+        const successMessage = document.querySelector('.alert-success');
+        const errorMessageToInsert = document.querySelector('.alert-danger-insert');
+        const errorMessageToEdit = document.querySelector('.alert-danger-edit');
+        const errorMessageToDelete = document.querySelector('.alert-danger-remove');
 
-        function ajustarClassesMensagens() {
-            var alerts = document.querySelectorAll('.alert');
-            alerts.forEach(function (alert) {
-                var originalClass = alert.className;
-                var parts = originalClass.split('-');
-                if (parts.length > 2) {
-                    var newClass = parts.slice(0, 2).join('-'); // Mantém apenas até o segundo traço
-                    alert.className = newClass + ' alert-dismissible fade show';
-                }
-            });
-        }
-
-        function manterAccordionAberto() {
-            var accordionContent = document.getElementById('collapseOne');
-            if (accordionContent) {
-                accordionContent.classList.add('show');
-            }
-        }
+        ajustarClassesMensagens();
+        manterAccordionAberto();
 
         if (errorMessageToInsert) {
-            var errorInsertModal = document.getElementById('addMemberModal');
-            var errorContainerAdd = document.getElementById('error-container-add');
-            errorContainerAdd.innerHTML = flashMessages.innerHTML;
-            $(errorInsertModal).modal('show');
-            ajustarClassesMensagens();
-            manterAccordionAberto();
+            mostrarErroModal('addMemberModal', 'error-container-add', flashMessages.innerHTML);
         }
 
-        if (successMessage) {
+        if (successMessage || errorMessageToEdit || errorMessageToDelete) {
             $('.modal').modal('hide');
             flashContainer.innerHTML = flashMessages.innerHTML;
-            ajustarClassesMensagens();
-            manterAccordionAberto();
-        }
-
-        if (errorMessageToEdit) {
-            $('.modal').modal('hide');
-            flashContainer.innerHTML = flashMessages.innerHTML;
-            ajustarClassesMensagens();
-            manterAccordionAberto();
-        }
-
-        if (errorMessageToDelete) {
-            flashContainer.innerHTML = flashMessages.innerHTML;
-            ajustarClassesMensagens();
-            manterAccordionAberto();
         }
 
         flashMessages.parentNode.removeChild(flashMessages);
     }
-});
 
-const select = document.getElementById("table-filter");
-const rows = document.querySelectorAll("tbody tr");
+    const select = document.getElementById("table-filter");
+    const rows = document.querySelectorAll("tbody tr");
 
-select.addEventListener("keyup", function (event) {
-    const value = event.target.value.toLowerCase();
-    rows.forEach(function (row) {
-        const text = row.textContent.toLowerCase();
-        if (text.indexOf(value) === -1) {
-            row.style.display = "none";
-        } else {
-            row.style.display = "table-row";
-        }
+    select.addEventListener("keyup", (event) => {
+        const value = event.target.value.toLowerCase();
+        rows.forEach((row) => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(value) ? "table-row" : "none";
+        });
     });
+
+    function ajustarClassesMensagens() {
+        document.querySelectorAll('.alert').forEach((alert) => {
+            const parts = alert.className.split('-');
+            if (parts.length > 2) {
+                alert.className = parts.slice(0, 2).join('-') + ' alert-dismissible fade show';
+            }
+        });
+    }
+
+    function manterAccordionAberto() {
+        const accordionContent = document.getElementById('collapseOne');
+        if (accordionContent) {
+            accordionContent.classList.add('show');
+        }
+    }
+
+    function mostrarErroModal(modalId, containerId, messageHTML) {
+        const modal = document.getElementById(modalId);
+        const errorContainer = document.getElementById(containerId);
+        errorContainer.innerHTML = messageHTML;
+        $(modal).modal('show');
+    }
 });
