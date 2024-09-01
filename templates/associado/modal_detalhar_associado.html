@@ -1,60 +1,39 @@
-<!-- Modal para Detalhar Associado -->
-<div id="viewMemberModal{{ associado.id_associado }}" class="modal fade" tabindex="-1"
-     role="dialog"
-     aria-labelledby="viewMemberModalLabel{{ associado.id_associado }}"
-     aria-hidden="true">
+<!-- Modal de detalhar para cada associado -->
+<div id="viewMemberModal{{ associado.id_associado }}" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="viewMemberModalLabel{{ associado.id_associado }}" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"
-                    id="viewMemberModalLabel{{ associado.id_associado }}">Detalhes do Associado</h4>
-                <button type="button" class="close" data-dismiss="modal"
-                        aria-label="Close">
+                <h4 class="modal-title" id="viewMemberModalLabel{{ associado.id_associado }}">Detalhes do Associado</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label>CPF:</label>
-                    <p>{{ associado.cpf }}</p>
-                </div>
-                <div class="form-group">
-                    <label>Nome:</label>
-                    <p>{{ associado.nome }}</p>
-                </div>
-                <div class="form-group">
-                    <label>Data de Nascimento:</label>
-                    <p>{{ associado.data_nascimento }}</p>
-                </div>
-                <div class="form-group">
-                    <label>Tipo:</label>
-                    <p>{{ associado.tipo }}</p>
-                </div>
-                <div class="form-group">
-                    <label>Plano:</label>
-                    <p>{{ associado.plano }}</p>
-                </div>
-                <div class="form-group">
-                    <label>Endereço:</label>
-                    <p>{{ associado.endereco }}</p>
-                </div>
-                <div class="form-group">
-                    <label>Telefone:</label>
-                    <p>{{ associado.telefone }}</p>
-                </div>
-                <div class="form-group">
-                    <label>Email:</label>
-                    <p>{{ associado.email }}</p>
-                </div>
-                <div class="form-group">
-                    <label>Data de Adesão:</label>
-                    <p>{{ associado.data_adesao }}</p>
+                <div class="card" style="width: 100%;">
+                    {% if associado.foto %}
+                        <img src="data:image/jpeg;base64,{{ associado.foto }}" class="card-img-top"
+                             alt="Foto do associado">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/default-profile.png') }}" class="card-img-top"
+                             alt="Foto do associado">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ associado.nome }}</h5>
+                        <p class="card-text"><strong>CPF:</strong> {{ associado.cpf }}</p>
+                        <p class="card-text"><strong>Email:</strong> {{ associado.email }}</p>
+                        <p class="card-text"><strong>Telefone:</strong> {{ associado.telefone }}</p>
+                        <p class="card-text"><strong>Data de Nascimento:</strong> {{ associado.data_nascimento }}</p>
+                        <p class="card-text"><strong>Tipo:</strong> {{ associado.tipo }}</p>
+                        <p class="card-text"><strong>Plano:</strong> {{ associado.plano }}</p>
+                        <p class="card-text"><strong>Endereço:</strong> {{ associado.endereco }}</p>
+                        <p class="card-text"><strong>Data de Adesão:</strong> {{ associado.data_adesao }}</p>
+                        <p class="card-text"><strong>Status:</strong> {{ associado.status }}</p>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    Fechar
-                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>
