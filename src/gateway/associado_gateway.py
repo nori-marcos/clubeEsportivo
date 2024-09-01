@@ -4,8 +4,15 @@ import psycopg2
 from sqlalchemy import text, Table, Column, String, Date, MetaData, UUID, Text
 from sqlalchemy.exc import IntegrityError
 
-from app import session, engine
-from models.associado import Associado
+import config
+from src.models.associado import Associado
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+engine = create_engine(config.POSTGRES_DATABASE_URI)
+Session = sessionmaker(bind=engine)
+session = Session()
 
 
 class AssociadoGateway:

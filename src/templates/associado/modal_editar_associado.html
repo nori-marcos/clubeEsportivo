@@ -16,7 +16,7 @@
             </div>
             <div class="modal-body">
                 <!-- Formulário para editar associado -->
-                <form action="{{ url_for('editar_associado', id_associado=associado.id_associado) }}"
+                <form action="{{ url_for('main.editar_associado', id_associado=associado.id_associado) }}"
                       method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="{{ associado.id_associado }}">
                     <div class="form-group">

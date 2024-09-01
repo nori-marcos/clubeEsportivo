@@ -1,7 +1,7 @@
 from flask import request, flash, redirect, url_for, session
 
-from gateway.associado_gateway import AssociadoGateway
-from utils.formulario_utils import obter_dados_formulario_associado
+from src.gateway.associado_gateway import AssociadoGateway
+from src.utils.formulario_utils import obter_dados_formulario_associado
 
 def salvar_dados_formulario_na_sessao():
     session['form_data'] = {

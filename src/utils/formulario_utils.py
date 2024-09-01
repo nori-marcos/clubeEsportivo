@@ -2,8 +2,8 @@ import uuid
 
 from flask import request
 
-from models.associado import Associado
-from utils.arquivo_utils import processar_foto
+from src.models.associado import Associado
+from src.utils.arquivo_utils import processar_foto
 
 
 def obter_dados_formulario_associado(id_associado=None):
