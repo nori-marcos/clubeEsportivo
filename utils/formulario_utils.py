@@ -18,6 +18,8 @@ def obter_dados_formulario_associado(id_associado=None):
     plano = request.form['plano']
     foto = processar_foto(request.files.get('foto'))
 
+    Associado.validar_cpf(cpf)
+
     return Associado(
         id_associado=id_associado if id_associado else uuid.uuid4(),
         cpf=cpf,

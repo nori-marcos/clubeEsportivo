@@ -2,25 +2,18 @@
     {% if messages %}
         <div id="flash-messages">
             {% for category, message in messages %}
-                {% if category == 'success' %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                {% elif category == 'danger' %}
-                    <div id="modal-error" class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                {% endif %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             {% endfor %}
         </div>
     {% endif %}
 {% endwith %}
+
+<div id="flash-container"></div>
 
 <!-- Card com os Dados dos Associados -->
 <div id="accordion">
@@ -68,17 +61,7 @@
                                     <td>
                                         <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
                                                 data-target="#editMemberModal{{ associado.id_associado }}"
-                                                data-id="{{ associado.id_associado }}"
-                                                data-cpf="{{ associado.cpf }}"
-                                                data-nome="{{ associado.nome }}"
-                                                data-data_nascimento="{{ associado.data_nascimento }}"
-                                                data-tipo="{{ associado.tipo }}"
-                                                data-endereco="{{ associado.endereco }}"
-                                                data-telefone="{{ associado.telefone }}"
-                                                data-email="{{ associado.email }}"
-                                                data-foto="{{ associado.foto }}"
-                                                data-plano="{{ associado.plano }}"
-                                                data-status="{{ associado.status }}">
+                                                data-id="{{ associado.id_associado }}">
                                             Editar
                                         </button>
                                         <button type="button"
@@ -215,7 +198,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div id="error-container"></div>
+                <div id="error-container-add"></div>
 
                 <!-- Formulário para adicionar associado -->
                 <form action="{{ url_for('inserir_associado') }}" method="POST" enctype="multipart/form-data">
@@ -293,30 +276,59 @@
     </div>
 </div>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var flashMessages = document.getElementById('flash-messages');
         if (flashMessages) {
-            var collapseOne = document.getElementById('collapseOne');
-            collapseOne.classList.add('show');
-
             var successMessage = document.querySelector('.alert-success');
-            var errorMessage = document.querySelector('.alert-danger');
-            var errorModal = document.getElementById('addMemberModal');
-            var errorContainer = document.getElementById('error-container');
-            var modalError = document.getElementById('modal-error');
+            var errorMessageToInsert = document.querySelector('.alert-danger-insert');
+            var errorMessageToEdit = document.querySelector('.alert-danger-edit');
+            var flashContainer = document.getElementById('flash-container');
+
+            function ajustarClassesMensagens() {
+                var alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function (alert) {
+                    var originalClass = alert.className;
+                    var parts = originalClass.split('-');
+                    if (parts.length > 2) {
+                        var newClass = parts.slice(0, 2).join('-'); // Mantém apenas até o segundo traço
+                        alert.className = newClass + ' alert-dismissible fade show';
+                    }
+                });
+            }
+
+            function manterAccordionAberto() {
+                var accordionContent = document.getElementById('collapseOne');
+                if (accordionContent) {
+                    accordionContent.classList.add('show');
+                }
+            }
+
+            if (errorMessageToInsert) {
+                var errorInsertModal = document.getElementById('addMemberModal');
+                var errorContainerAdd = document.getElementById('error-container-add');
+                errorContainerAdd.innerHTML = flashMessages.innerHTML;
+                $(errorInsertModal).modal('show');
+                ajustarClassesMensagens();
+                manterAccordionAberto();
+            }
 
             if (successMessage) {
-                setTimeout(function () {
-                    $(errorModal).modal('hide');
-                }, 2000);
-            } else if (modalError) {
-                if (!errorContainer.contains(modalError)) {
-                    errorContainer.appendChild(modalError);
-                }
-                $(errorModal).modal('show');
+                $('.modal').modal('hide');
+                flashContainer.innerHTML = flashMessages.innerHTML;
+                ajustarClassesMensagens();
+                manterAccordionAberto();
             }
+
+            if (errorMessageToEdit) {
+                $('.modal').modal('hide');
+                flashContainer.innerHTML = flashMessages.innerHTML;
+                ajustarClassesMensagens();
+                manterAccordionAberto();
+            }
+
+            flashMessages.parentNode.removeChild(flashMessages);
         }
     });
 </script>
+
