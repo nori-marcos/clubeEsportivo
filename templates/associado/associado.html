@@ -35,11 +35,18 @@
                     <div class="col-md-12">
                         <h2>
                             Lista de Associados
-                            <button type="button" class="btn btn-success float-right" data-toggle="modal"
-                                    data-target="#addMemberModal">Adicionar Associado
-                            </button>
                         </h2>
-                        <table class="table table-striped">
+                        <div class="input-group mb-3">
+                            <input id="table-filter" type="text" class="form-control"
+                                   placeholder="Filtrar por qualquer informação do associado (Nome, CPF, etc.)"
+                                   aria-label="Username"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                        <button type="button" class="btn btn-success float-right mb-3" data-toggle="modal"
+                                data-target="#addMemberModal">Adicionar Associado
+                        </button>
+                        <table id="myTable" class="table" aria-describedby="students attendance">
+                            <thead class="bg-light">
                             <tr>
                                 <th>CPF</th>
                                 <th>Nome</th>
@@ -50,7 +57,8 @@
                                 <th>Status</th>
                                 <th>Ações</th>
                             </tr>
-
+                            </thead>
+                            <tbody>
                             {% for associado in associados %}
                                 <tr>
                                     <td>{{ associado.cpf }}</td>
@@ -78,6 +86,7 @@
                                 </tr>
                                 {% include 'associado/modal_editar_associado.html' %}
                             {% endfor %}
+                            </tbody>
                         </table>
                     </div>
                 </div>

@@ -58,3 +58,18 @@ document.addEventListener('DOMContentLoaded', function () {
         flashMessages.parentNode.removeChild(flashMessages);
     }
 });
+
+const select = document.getElementById("table-filter");
+const rows = document.querySelectorAll("tbody tr");
+
+select.addEventListener("keyup", function (event) {
+    const value = event.target.value.toLowerCase();
+    rows.forEach(function (row) {
+        const text = row.textContent.toLowerCase();
+        if (text.indexOf(value) === -1) {
+            row.style.display = "none";
+        } else {
+            row.style.display = "table-row";
+        }
+    });
+});
