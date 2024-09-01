@@ -1,3 +1,5 @@
 /.idea
 /.venv-clube
 /.vscode
+__pycache__
+*.pyc
