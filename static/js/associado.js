@@ -56,4 +56,24 @@ document.addEventListener('DOMContentLoaded', function () {
         errorContainer.innerHTML = messageHTML;
         $(modal).modal('show');
     }
+
+    document.querySelectorAll('.telefone-mask').forEach(function (telefoneInput) {
+        telefoneInput.addEventListener('input', function (event) {
+            let input = event.target.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+            input = input.substring(0, 11); // Limita a entrada a 11 dígitos
+
+            const parte1 = input.substring(0, 2); // DDD
+            const parte2 = input.substring(2, 7); // Primeira parte do telefone
+            const parte3 = input.substring(7, 11); // Segunda parte do telefone
+
+            if (input.length > 7) {
+                event.target.value = `(${parte1}) ${parte2}-${parte3}`;
+            } else if (input.length > 2) {
+                event.target.value = `(${parte1}) ${parte2}`;
+            } else if (input.length > 0) {
+                event.target.value = `(${parte1}`;
+            }
+        });
+    });
+
 });
