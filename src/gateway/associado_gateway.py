@@ -1,14 +1,14 @@
 import uuid
 
-import psycopg2
+from sqlalchemy import create_engine
 from sqlalchemy import text, Table, Column, String, Date, MetaData, UUID, Text
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import sessionmaker
 
 import config
+from src.exceptions.exceptions import CustomException
 from src.models.associado import Associado
-
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from src.models.types import TipoPlano, Titularidade
 
 engine = create_engine(config.POSTGRES_DATABASE_URI)
 Session = sessionmaker(bind=engine)
@@ -41,7 +41,6 @@ class AssociadoGateway:
             VALUES (:ID_Associado, :Cpf, :Nome, :Data_Nascimento, :Endereco, :Telefone, :Email, :Tipo, :Plano, :Foto, :Data_Adesao)
             RETURNING "ID_Associado"
             """)
-
             result = session.execute(sql, {
                 'ID_Associado': associado.id_associado,
                 'Cpf': associado.cpf,
@@ -56,49 +55,15 @@ class AssociadoGateway:
                 'Plano': associado.plano
             })
             session.commit()
-
             associado.id_associado = result.scalar()
-
             return True, "Associado inserido com sucesso!"
-        except IntegrityError as e:
+        except SQLAlchemyError as e:
             session.rollback()
-            if isinstance(e.orig, psycopg2.errors.UniqueViolation):
-                return False, f"Erro de duplicidade: {e.orig}"
-
-            if isinstance(e.orig, psycopg2.errors.NotNullViolation):
-                return False, f"Erro de valor nulo: {e.orig}"
-
-            return False, f"Ocorreu um erro: {e.orig}"
-
-        except Exception as e:
-            session.rollback()
-            return False, f"Erro inesperado: {e}"
-
-    @staticmethod
-    def listar():
-        sql = text("""
-        SELECT "ID_Associado", "Cpf", "Nome", "Data_Nascimento", "Endereco", "Telefone", "Email", "Tipo", "Plano", "Foto", "Data_Adesao" 
-        FROM "Associados"
-        """)
-
-        result = session.execute(sql)
-        associados = []
-        for row in result.mappings():
-            associado = Associado(
-                id_associado=row['ID_Associado'],
-                cpf=row['Cpf'],
-                nome=row['Nome'],
-                email=row['Email'],
-                telefone=row['Telefone'],
-                tipo=row['Tipo'],
-                data_nascimento=row['Data_Nascimento'],
-                endereco=row['Endereco'],
-                foto=row['Foto'],
-                data_adesao=row['Data_Adesao'],
-                plano=row['Plano']
-            )
-            associados.append(associado)
-        return associados
+            erro_original = getattr(e, 'orig', None)
+            if erro_original:
+                raise CustomException(f"Erro ao salvar o associado: {erro_original}")
+            else:
+                raise CustomException(f"Erro no banco de dados: {e}")
 
     @staticmethod
     def editar(associado):
@@ -108,7 +73,6 @@ class AssociadoGateway:
             SET "Cpf" = :Cpf, "Nome" = :Nome, "Data_Nascimento" = :Data_Nascimento, "Endereco" = :Endereco, "Telefone" = :Telefone, "Email" = :Email, "Tipo" = :Tipo, "Plano" = :Plano, "Foto" = :Foto, "Data_Adesao" = :Data_Adesao
             WHERE "ID_Associado" = :ID_Associado
             """)
-
             session.execute(sql, {
                 'ID_Associado': associado.id_associado,
                 'Cpf': associado.cpf,
@@ -124,14 +88,47 @@ class AssociadoGateway:
             })
             session.commit()
             return True, "Associado atualizado com sucesso!"
-        except IntegrityError as e:
+
+        except SQLAlchemyError as e:
             session.rollback()
-            if isinstance(e.orig, psycopg2.errors.UniqueViolation):
-                return False, f"Erro de duplicidade: {e.orig}"
-            return False, f"Ocorreu um erro: {e}"
-        except Exception as e:
+            erro_original = getattr(e, 'orig', None)
+            if erro_original:
+                raise CustomException(f"Erro ao editar o associado: {erro_original}")
+            else:
+                raise CustomException(f"Erro no banco de dados: {e}")
+
+    @staticmethod
+    def listar():
+        try:
+            sql = text("""
+            SELECT "ID_Associado", "Cpf", "Nome", "Data_Nascimento", "Endereco", "Telefone", "Email", "Tipo", "Plano", "Foto", "Data_Adesao" 
+            FROM "Associados"
+            """)
+            result = session.execute(sql)
+            associados = []
+            for row in result.mappings():
+                associado = Associado(
+                    id_associado=str(row['ID_Associado']),
+                    cpf=row['Cpf'],
+                    nome=row['Nome'],
+                    email=row['Email'],
+                    telefone=row['Telefone'],
+                    tipo=Titularidade(row['Tipo']),
+                    data_nascimento=row['Data_Nascimento'],
+                    endereco=row['Endereco'],
+                    foto=row['Foto'],
+                    data_adesao=row['Data_Adesao'],
+                    plano=TipoPlano(row['Plano'])
+                )
+                associados.append(associado)
+            return associados
+        except SQLAlchemyError as e:
             session.rollback()
-            return False, f"Erro inesperado: {e}"
+            erro_original = getattr(e, 'orig', None)
+            if erro_original:
+                raise CustomException(f"Erro ao listar os associados: {erro_original}")
+            else:
+                raise CustomException(f"Erro no banco de dados: {e}")
 
     @staticmethod
     def remover(id_associado):
@@ -140,12 +137,15 @@ class AssociadoGateway:
             DELETE FROM "Associados"
             WHERE "ID_Associado" = :ID_Associado
             """)
-
             session.execute(sql, {
                 'ID_Associado': id_associado
             })
             session.commit()
             return True, "Associado removido com sucesso!"
-        except Exception as e:
+        except SQLAlchemyError as e:
             session.rollback()
-            return False, f"Erro inesperado: {e}"
+            erro_original = getattr(e, 'orig', None)
+            if erro_original:
+                raise CustomException(f"Erro ao editar o associado: {erro_original}")
+            else:
+                raise CustomException(f"Erro no banco de dados: {e}")

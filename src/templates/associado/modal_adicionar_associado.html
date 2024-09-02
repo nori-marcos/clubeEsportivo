@@ -13,65 +13,52 @@
                 <div id="error-container-add"></div>
 
                 <!-- Formulário para adicionar associado -->
-                <form action="{{ url_for('main.inserir_associado') }}" method="POST" enctype="multipart/form-data">
+                <form id="add-member-form" action="{{ url_for('main.inserir_associado') }}" method="POST"
+                      enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="cpf">CPF:</label>
-                        <input id="cpf" type="text" class="form-control cpf-mask" name="cpf"
-                               value="{{ form_data.get('cpf', '') }}" required>
+                        <input id="cpf" type="text" class="form-control cpf-mask" name="cpf" required>
                     </div>
                     <div class="form-group">
                         <label for="nome">Nome:</label>
-                        <input id="nome" type="text" class="form-control" name="nome"
-                               value="{{ form_data.get('nome', '') }}" required>
+                        <input id="nome" type="text" class="form-control" name="nome" required>
                     </div>
 
                     <div class="form-group">
                         <label for="data_nascimento">Data de Nascimento:</label>
-                        <input id="data_nascimento" type="date" class="form-control" name="data_nascimento"
-                               value="{{ form_data.get('data_nascimento', '') }}" required>
+                        <input id="data_nascimento" type="date" class="form-control" name="data_nascimento" required>
                     </div>
 
                     <div class="form-group">
                         <label for="tipo">Tipo:</label>
                         <select id="tipo" class="form-control" name="tipo" required>
-                            <option value="titular" {% if form_data.get('tipo') == 'titular' %}selected{% endif %}>
-                                Titular
-                            </option>
-                            <option value="dependente"
-                                    {% if form_data.get('tipo') == 'dependente' %}selected{% endif %}>Dependente
-                            </option>
+                            <option value="titular">Titular</option>
+                            <option value="dependente">Dependente</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="plano">Plano:</label>
                         <select id="plano" class="form-control" name="plano" required>
-                            <option value="ouro" {% if form_data.get('plano') == 'ouro' %}selected{% endif %}>Ouro
-                            </option>
-                            <option value="prata" {% if form_data.get('plano') == 'prata' %}selected{% endif %}>Prata
-                            </option>
-                            <option value="bronze" {% if form_data.get('plano') == 'bronze' %}selected{% endif %}>
-                                Bronze
-                            </option>
+                            <option value="ouro">Ouro</option>
+                            <option value="prata">Prata</option>
+                            <option value="bronze">Bronze</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="endereco">Endereço:</label>
-                        <input id="endereco" type="text" class="form-control" name="endereco"
-                               value="{{ form_data.get('endereco', '') }}" required>
+                        <input id="endereco" type="text" class="form-control" name="endereco" required>
                     </div>
 
                     <div class="form-group">
                         <label for="telefone">Telefone:</label>
-                        <input id="telefone" type="text" class="form-control telefone-mask" name="telefone"
-                               value="{{ form_data.get('telefone', '') }}" required>
+                        <input id="telefone" type="text" class="form-control telefone-mask" name="telefone" required>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <input id="email" type="email" class="form-control" name="email"
-                               value="{{ form_data.get('email', '') }}" required>
+                        <input id="email" type="email" class="form-control" name="email" required>
                     </div>
 
                     <div class="form-group">
@@ -79,10 +66,13 @@
                         <input id="foto" type="file" class="form-control" name="foto">
                     </div>
 
-                    <input id="data_adesao" type="hidden" class="form-control" name="data_adesao"
-                           value="{{ today }}" required>
+                    <input id="data_adesao" type="hidden" class="form-control" name="data_adesao" value="{{ today }}"
+                           required>
 
-                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                    <div class="form-group text-right">
+                        <button type="reset" class="btn btn-danger" id="btn-clear">Limpar</button>
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
