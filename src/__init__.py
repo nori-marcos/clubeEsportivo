@@ -3,10 +3,10 @@ from flask import Flask
 from config import Config
 
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder='templates', static_folder='static')
     app.config.from_object(config_class)
 
-    # Extenções do Flask
+    # Extensões do Flask
 
     # Blueprints
     from src.main import bp as main_bp
