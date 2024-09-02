@@ -1,5 +1,7 @@
 /.idea
 /.venv-clube
 /.vscode
+venv
 __pycache__
 *.pyc
+*.bkp
