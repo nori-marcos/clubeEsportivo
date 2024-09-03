@@ -23,96 +23,93 @@
     {% endif %}
 {% endwith %}
 
-<div id="flash-container"></div>
 
 <!-- Card com os Dados dos Associados -->
-<div id="accordion">
-    <div class="card">
-        <div class="card-header" id="headingOne">
-            <h5 class="mb-0">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
-                        aria-controls="collapseOne">
-                    Associados
-                </button>
-            </h5>
-        </div>
+<div class="card">
+    <div class="card-header" id="headingOne">
+        <h5 class="mb-0">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+                Associados
+            </button>
+        </h5>
+    </div>
 
-        <!-- Verificação para manter o accordion aberto -->
-        <div id="collapseOne" class="accordion-collapse collapse {% if messages %}show{% endif %}"
-             aria-labelledby="headingOne">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2>
-                            Lista de Associados
-                        </h2>
-                        <div class="input-group mb-3">
-                            <input id="table-filter" type="text" class="form-control"
-                                   placeholder="Filtrar por qualquer informação do associado (Nome, CPF, etc.)"
-                                   aria-label="Username"
-                                   aria-describedby="basic-addon1">
-                        </div>
-                        <button type="button" class="btn btn-success float-right mb-3" data-toggle="modal"
-                                data-target="#addMemberModal">Adicionar Associado
-                        </button>
-                        <table id="myTable" class="table" aria-describedby="students attendance">
-                            <thead class="bg-light">
-                            <tr>
-                                <th>CPF</th>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Telefone</th>
-                                <th>Data de Adesão</th>
-                                <th>Plano</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for associado in associados %}
-                                <tr>
-                                    <td>{{ associado.cpf }}</td>
-                                    <td>{{ associado.nome }}</td>
-                                    <td>{{ associado.email }}</td>
-                                    <td>{{ associado.telefone }}</td>
-                                    <td>{{ associado.data_adesao }}</td>
-                                    <td>
-                                        {% if associado.plano == 'OURO' %}
-                                            <span class="badge badge-pill badge-warning">ouro</span>
-                                        {% elif associado.plano == 'PRATA' %}
-                                            <span class="badge badge-pill badge-secondary">prata</span>
-                                        {% elif associado.plano == 'BRONZE' %}
-                                            <span class="badge badge-pill"
-                                                  style="background-color: #cd7f32; color: white;">bronze</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ associado.status }}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                                data-target="#viewMemberModal{{ associado.id_associado }}">
-                                            Detalhar
-                                        </button>
-                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                                                data-target="#editMemberModal{{ associado.id_associado }}"
-                                                data-id="{{ associado.id_associado }}">
-                                            Editar
-                                        </button>
-                                        <form action="{{ url_for('main.remover_associado', id_associado=associado.id_associado) }}"
-                                              method="POST" style="display:inline;">
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <button type="submit" class="btn btn-danger btn-xs"
-                                                    onclick="return confirm('Você tem certeza que deseja deletar?')">
-                                                Deletar
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                {% include 'associado/modal_detalhar_associado.html' %}
-                                {% include 'associado/modal_editar_associado.html' %}
-                            {% endfor %}
-                            </tbody>
-                        </table>
+    <!-- Verificação para manter o accordion aberto -->
+    <div id="collapseOne" class="accordion-collapse collapse {% if messages %}show{% endif %}"
+         aria-labelledby="headingOne">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>
+                        Lista de Associados
+                    </h2>
+                    <div class="input-group mb-3">
+                        <input id="table-filter-member" type="text" class="form-control"
+                               placeholder="Filtrar por qualquer informação do associado (Nome, CPF, etc.)"
+                               aria-label="Username"
+                               aria-describedby="basic-addon1">
                     </div>
+                    <button type="button" class="btn btn-success float-right mb-3" data-toggle="modal"
+                            data-target="#addMemberModal">Adicionar Associado
+                    </button>
+                    <table id="memberTable" class="table" aria-describedby="students attendance">
+                        <thead class="bg-light">
+                        <tr>
+                            <th>CPF</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Telefone</th>
+                            <th>Data de Adesão</th>
+                            <th>Plano</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for associado in associados %}
+                            <tr>
+                                <td>{{ associado.cpf }}</td>
+                                <td>{{ associado.nome }}</td>
+                                <td>{{ associado.email }}</td>
+                                <td>{{ associado.telefone }}</td>
+                                <td>{{ associado.data_adesao }}</td>
+                                <td>
+                                    {% if associado.plano == 'OURO' %}
+                                        <span class="badge badge-pill badge-warning">ouro</span>
+                                    {% elif associado.plano == 'PRATA' %}
+                                        <span class="badge badge-pill badge-secondary">prata</span>
+                                    {% elif associado.plano == 'BRONZE' %}
+                                        <span class="badge badge-pill"
+                                              style="background-color: #cd7f32; color: white;">bronze</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ associado.status }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                            data-target="#viewMemberModal{{ associado.id_associado }}">
+                                        Detalhar
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                            data-target="#editMemberModal{{ associado.id_associado }}"
+                                            data-id="{{ associado.id_associado }}">
+                                        Editar
+                                    </button>
+                                    <form action="{{ url_for('main.remover_associado', id_associado=associado.id_associado) }}"
+                                          method="POST" style="display:inline;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger btn-xs"
+                                                onclick="return confirm('Você tem certeza que deseja deletar?')">
+                                            Deletar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% include 'associado/modal_detalhar_associado.html' %}
+                            {% include 'associado/modal_editar_associado.html' %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
