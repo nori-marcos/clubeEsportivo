@@ -10,3 +10,14 @@ class Titularidade(str, Enum):
     TITULAR = 'TITULAR'
     DEPENDENTE = 'DEPENDENTE'
 
+class StatusPagamento(str, Enum):
+    PENDENTE = 'PENDENTE'
+    PAGO = 'PAGO'
+    ATRASADO = 'ATRASADO'
+
+class MetodoPagamento(str, Enum):
+    DEBITO = 'DEBITO'
+    CREDITO = 'CREDITO'
+    BOLETO = 'BOLETO'
+    PIX = 'PIX'
+    DINHEIRO = 'DINHEIRO'
