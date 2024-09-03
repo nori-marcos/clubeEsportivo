@@ -12,6 +12,6 @@ class TestModels(unittest):
             'plano': 'ouro',
             'data_nascimento': '1990-01-01',
             'endereco': 'endereco_test',
-            'foto': base64,
+            'foto': '',
             'data_adesao': 'data_adesao_test',
         }

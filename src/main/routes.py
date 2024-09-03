@@ -3,13 +3,12 @@ from datetime import datetime
 from flask import render_template, request, flash, redirect, url_for
 
 from src.controllers import associado_controller
-from src.gateway.associado_gateway import AssociadoGateway
 from src.main import bp
 
 
 @bp.route('/')
 def index():
-    associados = AssociadoGateway.listar()
+    associados = associado_controller.listar_todos()
     today = datetime.today()
     return render_template('index.html', associados=associados, today=today, form_data={})
 

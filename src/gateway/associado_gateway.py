@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 import config
 from src.exceptions.exceptions import CustomException
 from src.models.associado import Associado
-from src.models.types import TipoPlano, Titularidade
+from src.models.types import TipoDePlano, Titularidade
 
 engine = create_engine(config.POSTGRES_DATABASE_URI)
 Session = sessionmaker(bind=engine)
@@ -98,7 +98,7 @@ class AssociadoGateway:
                 raise CustomException(f"Erro no banco de dados: {e}")
 
     @staticmethod
-    def listar():
+    def listar_todos():
         try:
             sql = text("""
             SELECT "ID_Associado", "Cpf", "Nome", "Data_Nascimento", "Endereco", "Telefone", "Email", "Tipo", "Plano", "Foto", "Data_Adesao" 
@@ -118,7 +118,7 @@ class AssociadoGateway:
                     endereco=row['Endereco'],
                     foto=row['Foto'],
                     data_adesao=row['Data_Adesao'],
-                    plano=TipoPlano(row['Plano'])
+                    plano=TipoDePlano(row['Plano'])
                 )
                 associados.append(associado)
             return associados
