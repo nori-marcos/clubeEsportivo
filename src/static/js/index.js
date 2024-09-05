@@ -49,12 +49,25 @@ document.addEventListener('DOMContentLoaded', function () {
         flashMessages.parentNode.removeChild(flashMessages);
     }
 
-    const select = document.getElementById("table-filter");
-    const rows = document.querySelectorAll("tbody tr");
+    const selectMember = document.getElementById("table-filter-member");
+    const memberTable = document.getElementById("memberTable");
+    const memberRows = memberTable.querySelectorAll("tbody tr");
 
-    select.addEventListener("keyup", (event) => {
+    selectMember.addEventListener("keyup", (event) => {
         const value = event.target.value.toLowerCase();
-        rows.forEach((row) => {
+        memberRows.forEach((row) => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(value) ? "table-row" : "none";
+        });
+    });
+
+    const selectPayment = document.getElementById("table-filter-payment");
+    const paymentTable = document.getElementById("paymentTable");
+    const rowsPayment = paymentTable.querySelectorAll("tbody tr");
+
+    selectPayment.addEventListener("keyup", (event) => {
+        const value = event.target.value.toLowerCase();
+        rowsPayment.forEach((row) => {
             const text = row.textContent.toLowerCase();
             row.style.display = text.includes(value) ? "table-row" : "none";
         });

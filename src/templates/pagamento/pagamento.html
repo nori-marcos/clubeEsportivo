@@ -1,3 +1,4 @@
+<!-- Card com os Dados dos Pagamentos -->
 <div class="card">
     <div class="card-header" id="headingTwo">
         <h5 class="mb-0">
@@ -8,32 +9,57 @@
         </h5>
     </div>
 
-    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+    <div id="collapseTwo" class="accordion-collapse collapse{% if messages %}show{% endif %}"
+         aria-labelledby="headingTwo">
         <div class="card-body">
             <div class="row">
-
                 <div class="col md-12">
                     <h2>
                         Lista de Pagamentos
-                        <button type="button" class="btn btn-success  float-right" data-toggle="modal"
-                                data-target="#myModal">Adicionar Pagamento
-                        </button>
+
                     </h2>
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                    squid. 3
-                    wolf
-                    moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                    eiusmod.
-                    Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
-                    assumenda
-                    shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt
-                    sapiente
-                    ea
-                    proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table,
-                    raw
-                    denim
-                    aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable
-                    VHS.
+                    <div class="input-group mb-3">
+                        <input id="table-filter-payment" type="text" class="form-control"
+                               placeholder="Filtrar por qualquer informação do pagamento (ID, Data, etc.)"
+                               aria-label="Payment"
+                               aria-describedby="basic-addon1">
+                    </div>
+                    <button type="button" class="btn btn-success float-right mb-3" data-toggle="modal"
+                            data-target="#myModal">Adicionar Pagamento
+                    </button>
+                    <table id="paymentTable" class="table" aria-describedby="students attendance">
+                        <thead class="bg-light">
+                        <tr>
+                            <th>CPF</th>
+                            <th>Nome</th>
+                            <th>Valor</th>
+                            <th>Data de Vencimento</th>
+                            <th>Data de Pagamento</th>
+                            <th>Forma de Pagamento</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>123.456.789-00</td>
+                            <td>João da Silva</td>
+                            <td>R$ 100,00</td>
+                            <td>01/01/2021</td>
+                            <td>01/01/2021</td>
+                            <td>Cartão de Crédito</td>
+                            <td>Pago</td>
+                            <td>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#myModal">Editar
+                                </button>
+                                <button type="button" class="btn btn-danger" data-toggle="modal"
+                                        data-target="#myModal">Excluir
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
