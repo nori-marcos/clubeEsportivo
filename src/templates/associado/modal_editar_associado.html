@@ -1,13 +1,13 @@
 <!-- Modal de edição para cada associado -->
-<div id="editMemberModal{{ associado.id_associado }}" class="modal fade" tabindex="-1"
+<div id="editMemberModal{{ associado.cpf }}" class="modal fade" tabindex="-1"
      role="dialog"
-     aria-labelledby="editMemberModalLabel{{ associado.id_associado }}"
+     aria-labelledby="editMemberModalLabel{{ associado.cpf }}"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"
-                    id="editMemberModalLabel{{ associado.id_associado }}">Editar
+                    id="editMemberModalLabel{{ associado.cpf }}">Editar
                     Associado</h4>
                 <button type="button" class="close" data-dismiss="modal"
                         aria-label="Close">
@@ -18,25 +18,25 @@
                 <div id="error-container-edit"></div>
 
                 <!-- Formulário para editar associado -->
-                <form action="{{ url_for('main.editar_associado', id_associado=associado.id_associado) }}"
+                <form action="{{ url_for('main.editar_associado', cpf_associado=associado.cpf) }}"
                       method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="id" value="{{ associado.id_associado }}">
+                    <input type="hidden" name="id" value="{{ associado.cpf }}">
                     <div class="form-group">
-                        <label for="edit-cpf-{{ associado.id_associado }}">CPF:</label>
-                        <input id="edit-cpf-{{ associado.id_associado }}" type="text"
+                        <label for="edit-cpf-{{ associado.cpf }}">CPF:</label>
+                        <input id="edit-cpf-{{ associado.cpf }}" type="text"
                                class="form-control cpf-mask" name="cpf"
-                               value="{{ associado.cpf }}" required>
+                               value="{{ associado.cpf }}" required readonly>
                     </div>
                     <div class="form-group">
-                        <label for="edit-nome-{{ associado.id_associado }}">Nome:</label>
-                        <input id="edit-nome-{{ associado.id_associado }}" type="text"
+                        <label for="edit-nome-{{ associado.cpf }}">Nome:</label>
+                        <input id="edit-nome-{{ associado.cpf }}" type="text"
                                class="form-control" name="nome"
                                value="{{ associado.nome }}" required>
                     </div>
                     <div class="form-group">
-                        <label for="edit-data_nascimento-{{ associado.id_associado }}">Data
+                        <label for="edit-data_nascimento-{{ associado.cpf }}">Data
                             de Nascimento:</label>
-                        <input id="edit-data_nascimento-{{ associado.id_associado }}"
+                        <input id="edit-data_nascimento-{{ associado.cpf }}"
                                type="date" class="form-control" name="data_nascimento"
                                value="{{ associado.data_nascimento }}" required>
                     </div>
@@ -56,8 +56,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="edit-plano-{{ associado.id_associado }}">Plano:</label>
-                        <select id="edit-plano-{{ associado.id_associado }}"
+                        <label for="edit-plano-{{ associado.cpf }}">Plano:</label>
+                        <select id="edit-plano-{{ associado.cpf }}"
                                 class="form-control" name="plano" required>
                             <option value="ouro"
                                     {% if associado.plano == 'ouro' %}selected{% endif %}>
@@ -75,23 +75,23 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="edit-endereco-{{ associado.id_associado }}">Endereço:</label>
-                        <input id="edit-endereco-{{ associado.id_associado }}"
+                        <label for="edit-endereco-{{ associado.cpf }}">Endereço:</label>
+                        <input id="edit-endereco-{{ associado.cpf }}"
                                type="text"
                                class="form-control" name="endereco"
                                value="{{ associado.endereco }}" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="edit-telefone-{{ associado.id_associado }}">Telefone:</label>
-                        <input id="edit-telefone-{{ associado.id_associado }}"
+                        <label for="edit-telefone-{{ associado.cpf }}">Telefone:</label>
+                        <input id="edit-telefone-{{ associado.cpf }}"
                                type="text" class="form-control telefone-mask" name="telefone"
                                value="{{ associado.telefone }}" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="edit-email-{{ associado.id_associado }}">Email:</label>
-                        <input id="edit-email-{{ associado.id_associado }}" type="email"
+                        <label for="edit-email-{{ associado.cpf }}">Email:</label>
+                        <input id="edit-email-{{ associado.cpf }}" type="email"
                                class="form-control" name="email"
                                value="{{ associado.email }}" required>
                     </div>

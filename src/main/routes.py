@@ -18,14 +18,14 @@ def inserir_associado():
     return associado_controller.inserir_associado()
 
 
-@bp.route('/editar/associado/<id_associado>', methods=['POST'])
-def editar_associado(id_associado):
-    return associado_controller.editar_associado(id_associado)
+@bp.route('/editar/associado', methods=['POST'])
+def editar_associado():
+    return associado_controller.editar_associado()
 
 
-@bp.route('/remover_associado/<id_associado>', methods=['GET', 'POST'])
-def remover_associado(id_associado):
+@bp.route('/remover_associado/<cpf_associado>', methods=['GET', 'POST'])
+def remover_associado(cpf_associado):
     if request.form.get('_method') == 'DELETE':
-        return associado_controller.remover_associado(id_associado)
+        return associado_controller.remover_associado(cpf_associado)
     flash('Método não permitido', 'danger')
     return redirect(url_for('main.index'))
