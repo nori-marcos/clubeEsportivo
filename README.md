@@ -1,8 +1,15 @@
 # Introdução
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis auctor posuere iaculis. Nunc porttitor leo non magna fringilla mollis. Nam pellentesque nunc ut tellus fermentum, sit amet ornare turpis bibendum. Sed eu justo sit amet dui porttitor volutpat. Ut id eleifend arcu, auctor egestas ante. Etiam eu aliquam quam, sit amet rhoncus sapien. Pellentesque ac mauris congue, porttitor dolor eget, eleifend ligula. In egestas velit at eleifend ullamcorper. Donec at sagittis ligula, id tincidunt neque. Donec vel nunc luctus odio feugiat pharetra. Aliquam dictum blandit lobortis. Curabitur lorem lacus, laoreet ut aliquam eu, semper vel leo. Vivamus est justo, consectetur et sem sit amet, aliquam posuere purus.
+O projeto pretende gerenciar as atividades de um clube esportivo, atendendo às necessidades de funcionários e
+associados. Foram definidas 12 entidades, sendo as principais: associado, funcionário, evento e instalação. Foi adotado
+o padrão CRUD para operações de criação, leitura, atualização e deleção das entidades, conforme especificação do
+projeto.
 
+Associados e funcionários têm como chave primária o CPF. Como identificador das tuplas nas demais tabelas, foi utilizado
+um número serial autoincrementado.
 
+O sistema será desenvolvido utilizando a linguagem de programação Python `3.12` - framework Flask - e o banco de dados PostgreSQL. A
+interface do usuário será web."
 
 ## Como executar o projeto
 
@@ -52,7 +59,11 @@ O diagrama foi criado usando a ferramenta de tabelas do PyCharm.
 
 # Exemplos de Consulta em Algebra relacional
 
+lorem ipsum
+
 # Avaliação das formas normais
+
+lorem ipsum
 
 # Diagrama da camada de mapeamento para uma tabela do banco de dados
 
