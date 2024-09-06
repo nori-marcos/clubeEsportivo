@@ -3,9 +3,9 @@ import base64
 from flask import request
 
 
-def processar_foto(foto) -> bytes | None:
+def processar_foto(foto) -> str | None:
     if foto and arquivo_permitido(foto.filename):
-        return base64.b64encode(foto.read())
+        return base64.b64encode(foto.read()).decode('utf-8')
     return request.form.get('foto-atual')
 
 

@@ -11,8 +11,7 @@
                      data-endereco="{{ form_data.endereco }}"
                      data-telefone="{{ form_data.telefone }}"
                      data-email="{{ form_data.email }}"
-                     data-plano="{{ form_data.plano }}"
-                     data-id="{{ form_data.id_associado }}">
+                     data-plano="{{ form_data.plano }}">
                     {{ message }}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -87,15 +86,15 @@
                                 <td>{{ associado.status }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                            data-target="#viewMemberModal{{ associado.id_associado }}">
+                                            data-target="#viewMemberModal{{ associado.cpf }}">
                                         Detalhar
                                     </button>
                                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                                            data-target="#editMemberModal{{ associado.id_associado }}"
-                                            data-id="{{ associado.id_associado }}">
+                                            data-target="#editMemberModal{{ associado.cpf }}"
+                                            data-cpf="{{ associado.cpf }}">
                                         Editar
                                     </button>
-                                    <form action="{{ url_for('main.remover_associado', id_associado=associado.id_associado) }}"
+                                    <form action="{{ url_for('main.remover_associado', cpf_associado=associado.cpf) }}"
                                           method="POST" style="display:inline;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" class="btn btn-danger btn-xs"

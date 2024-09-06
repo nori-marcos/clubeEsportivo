@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (errorMessageToEdit) {
-            const id = errorMessageToEdit.getAttribute('data-id');
-            const nomeModal = `editMemberModal${id}`;
+            const cpf = errorMessageToEdit.getAttribute('data-cpf');
+            const nomeModal = `editMemberModal${cpf}`;
             mostrarErroModal(nomeModal, 'error-container-edit', flashMessages.innerHTML);
             ajustarClassesMensagens();
             manterAccordionAberto();
