@@ -20,18 +20,22 @@
                     {% endif %}
                     <div class="card-body">
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {% if associado.plano == 'OURO' %}
+                            {% if associado.plano.value == 'OURO' %}
                                 🥇 Você é nosso associado ouro!
-                            {% elif associado.plano == 'PRATA' %}
+                            {% elif associado.plano.value == 'PRATA' %}
                                 🥈 Você é nosso associado prata!
-                            {% elif associado.plano == 'BRONZE' %}
+                            {% elif associado.plano.value == 'BRONZE' %}
                                 🥉 Você é nosso associado bronze!
                             {% endif %}
                         </div>
                         <h5 class="card-title">{{ associado.nome }}</h5>
                         <p class="card-text"><strong>CPF:</strong> {{ associado.cpf.cpf }}</p>
                         <p class="card-text"><strong>Email:</strong> {{ associado.email }}</p>
-                        <p class="card-text"><strong>Telefone:</strong> {{ associado.telefone1 }}</p>
+                        <p class="card-text"><strong>Telefone
+                            1:</strong> {{ associado.telefones[0].telefone if associado.telefones else '' }}</p>
+                        <p class="card-text"><strong>Telefone
+                            2:</strong> {{ associado.telefones[1].telefone if associado.telefones and associado.telefones | length > 1 else '' }}
+                        </p>
                         <p class="card-text"><strong>Data de Nascimento:</strong> {{ associado.data_nascimento }}</p>
                         <p class="card-text"><strong>Tipo:</strong> {{ associado.tipo.value }}</p>
                         <p class="card-text"><strong>Endereço:</strong> {{ associado.endereco }}</p>
