@@ -62,6 +62,11 @@ def remover_associado(cpf_associado):
     return redirect(url_for('main.index'))
 
 
+@bp.route('/inserir/pagamento', methods=['POST'])
+def inserir_pagamento():
+    return pagamento_controller.inserir_pagamento()
+
+
 @bp.route('/remover_pagamento/<id_pagamento>', methods=['GET', 'POST'])
 def remover_pagamento(id_pagamento):
     if request.form.get('_method') == 'DELETE':

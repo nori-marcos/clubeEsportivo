@@ -236,4 +236,31 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    const cpfSelect = document.getElementById('cpf_pagamento');
+    const nomeSelect = document.getElementById('nome_pagamento');
+
+    nomeSelect.addEventListener('change', function () {
+        const selectedOption = nomeSelect.options[nomeSelect.selectedIndex];
+        const cpf = selectedOption.getAttribute('data-cpf');
+
+        for (let i = 0; i < cpfSelect.options.length; i++) {
+            if (cpfSelect.options[i].value === cpf) {
+                cpfSelect.selectedIndex = i;
+                break;
+            }
+        }
+    });
+
+    cpfSelect.addEventListener('change', function () {
+        const selectedOption = cpfSelect.options[cpfSelect.selectedIndex];
+        const nome = selectedOption.getAttribute('data-nome');
+
+        for (let i = 0; i < nomeSelect.options.length; i++) {
+            if (nomeSelect.options[i].value === nome) {
+                nomeSelect.selectedIndex = i;
+                break;
+            }
+        }
+    });
 });
