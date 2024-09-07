@@ -1,9 +1,8 @@
-from datetime import datetime
+from typing import List
 
 from flask import request
 
-from src.models.associado import Associado
-from src.utils.arquivo_utils import processar_foto
+from src.models.types import CPF, Telefone
 
 
 def extrair_dados_formulario():
@@ -22,38 +21,17 @@ def extrair_campos_formulario(campo: str):
     return request.form.get(campo, '')
 
 
-def criar_associado_pelo_formulario():
-    try:
-        cpf = request.form.get('cpf', '')
-        nome = request.form.get('nome', '')
-        data_nascimento = request.form.get('data_nascimento', '')
-        tipo = request.form.get('tipo', '')
-        endereco = request.form.get('endereco', '')
-        telefone = request.form.get('telefone', '')
-        email = request.form.get('email', '')
-        plano = request.form.get('plano', '')
-        data_adesao = request.form.get('data_adesao', datetime.today().strftime('%Y-%m-%d'))
+def extrair_telefones(cpf: CPF) -> List[Telefone]:
+    telefones = []
 
-        foto = processar_foto(request.files.get('foto', None))
+    telefone1_form = request.form.get('telefone1', None)
+    if telefone1_form:
+        telefone1 = Telefone(dono=cpf, telefone=telefone1_form)
+        telefones.append(telefone1)
 
-        if foto is None:
-            foto = request.form.get('foto-atual', None)
+    telefone2_form = request.form.get('telefone2', None)
+    if telefone2_form:
+        telefone2 = Telefone(dono=cpf, telefone=telefone2_form)
+        telefones.append(telefone2)
 
-        return Associado(
-            cpf=cpf,
-            nome=nome,
-            data_nascimento=data_nascimento,
-            tipo=tipo,
-            endereco=endereco,
-            telefone=telefone,
-            email=email,
-            plano=plano,
-            foto=foto,
-            data_adesao=data_adesao)
-
-    except KeyError as e:
-        raise ValueError(f"Campo obrigatório ausente: {e}")
-    except ValueError as e:
-        raise ValueError(f"Erro de validação: {e}")
-    except Exception as e:
-        raise RuntimeError(f"Erro ao criar associado: {e}")
+    return telefones

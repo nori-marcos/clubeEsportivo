@@ -17,34 +17,46 @@ class Gateway:
     @staticmethod
     def salvar_associado(associado: Associado):
         try:
-            sql = text("""
-            INSERT INTO associados (cpf, nome, data_nascimento, endereco, telefone, email, tipo, plano, foto, data_adesao)
-            VALUES (:cpf, :nome, :data_nascimento, :endereco, :telefone, :email, :tipo, :plano, :foto, :data_adesao)
+            sql_contrato = text("""
+            INSERT INTO contratos (data_inicio, data_termino, plano)
+            VALUES (CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', :plano)
+            RETURNING id_contrato
+            """)
+            result_contrato = session.execute(sql_contrato, {'plano': associado.plano})
+            id_contrato = result_contrato.scalar()
+
+            sql_associado = text("""
+            INSERT INTO associados (cpf, nome, foto, data_adesao, data_nascimento, endereco, email, associado_titular, contrato)
+            VALUES (:cpf, :nome, :foto, CURRENT_DATE, :data_nascimento, :endereco, :email, :tipo, :contrato)
             RETURNING cpf
             """)
 
-            foto_bytes = base64.b64decode(associado.foto) if associado.foto else None
-
-            result = session.execute(sql, {
-                'cpf': associado.cpf,
+            result_associado = session.execute(sql_associado, {
+                'cpf': associado.cpf.cpf,
                 'nome': associado.nome,
+                'foto': base64.b64decode(associado.foto) if associado.foto else None,
                 'data_nascimento': associado.data_nascimento,
                 'endereco': associado.endereco,
-                'telefone': associado.telefone,
                 'email': associado.email,
-                'tipo': associado.tipo,
-                'foto': foto_bytes,
-                'data_adesao': associado.data_adesao,
-                'plano': associado.plano
+                'tipo': None,
+                'contrato': id_contrato
             })
+            cpf_associado = result_associado.scalar()
+
+            sql_telefones = text("""
+            INSERT INTO associados_telefones (associado, telefone)
+            VALUES (:associado, :telefone)
+            """)
+            for telefone in associado.telefones:
+                session.execute(sql_telefones, {'associado': cpf_associado, 'telefone': telefone.telefone})
+
             session.commit()
-            associado.cpf = result.scalar()
             return True, "Associado inserido com sucesso!"
         except SQLAlchemyError as e:
             session.rollback()
             erro_original = getattr(e, 'orig', None)
             if erro_original:
-                raise CustomException(f"Erro ao salvar o associado: {erro_original}")
+                raise CustomException(f"Erro ao inserir o associado: {erro_original}")
             else:
                 raise CustomException(f"Erro no banco de dados: {e}")
 
@@ -167,34 +179,5 @@ class Gateway:
             erro_original = getattr(e, 'orig', None)
             if erro_original:
                 raise CustomException(f"Erro ao remover o associado: {erro_original}")
-            else:
-                raise CustomException(f"Erro no banco de dados: {e}")
-
-    @staticmethod
-    def listar_pagamentos():
-        try:
-            sql = text("""
-            SELECT id_pagamento, data_vencimento, data_pagamento, valor, tipo, metodo, descricao
-            FROM pagamentos
-            """)
-            result = session.execute(sql)
-            pagamentos = []
-            for row in result.mappings():
-                pagamento = {
-                    'id_pagamento': row['id_pagamento'],
-                    'data_vencimento': row['data_vencimento'],
-                    'data_pagamento': row['data_pagamento'],
-                    'valor': row['valor'],
-                    'tipo': row['tipo'],
-                    'metodo': row['metodo'],
-                    'descricao': row['descricao']
-                }
-                pagamentos.append(pagamento)
-            return pagamentos
-        except SQLAlchemyError as e:
-            session.rollback()
-            erro_original = getattr(e, 'orig', None)
-            if erro_original:
-                raise CustomException(f"Erro ao listar os pagamentos: {erro_original}")
             else:
                 raise CustomException(f"Erro no banco de dados: {e}")

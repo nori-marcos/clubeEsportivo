@@ -4,9 +4,9 @@ from flask import flash, render_template, redirect, url_for, request
 
 from src.gateway.gateway import Gateway
 from src.models.associado import Associado
-from src.models.types import CPF, Telefone
+from src.models.types import CPF
 from src.utils.arquivo_utils import processar_foto
-from src.utils.formulario_utils import extrair_dados_formulario
+from src.utils.formulario_utils import extrair_dados_formulario, extrair_telefones
 
 
 def listar_associados():
@@ -16,13 +16,24 @@ def listar_associados():
 def inserir_associado():
     try:
         foto = processar_foto(request.files.get('foto', None))
-        telefone1_form = request.form.get('telefone1', None)
-        telefone1: Telefone = Telefone(telefone=telefone1_form, cpf=request.form.get('cpf')) if telefone1_form else None
-        telefone2_form = request.form.get('telefone2', None)
-        telefone2: Telefone = Telefone(telefone=telefone2_form, cpf=request.form.get('cpf')) if telefone2_form else None
-        telefones = [telefone1, telefone2] if telefone1 or telefone2 else []
-        associado = Associado(**request.form, foto=foto, telefones=telefones)
+
+        cpf = CPF(cpf=request.form.get('cpf'))
+        telefones = extrair_telefones(cpf)
+
+        associado = Associado(
+            cpf=cpf,
+            nome=request.form.get('nome'),
+            email=request.form.get('email'),
+            tipo=request.form.get('tipo'),
+            plano=request.form.get('plano'),
+            data_nascimento=request.form.get('data_nascimento'),
+            endereco=request.form.get('endereco'),
+            foto=foto,
+            telefones=telefones
+        )
+
         sucesso, mensagem = Gateway.salvar_associado(associado)
+
         if sucesso:
             flash(mensagem, 'success')
         return redirect(url_for('main.index'))
@@ -30,7 +41,30 @@ def inserir_associado():
         form_data_member = extrair_dados_formulario()
         flash(f'Ocorreu um erro ao adicionar o associado: {e}', 'danger-insert-member')
         associados = Gateway.listar_associados()
-        pagamentos = Gateway.listar_pagamentos()
+        pagamentos = [
+            {
+                'id_pagamento': 1,
+                'cpf_associado': '123.456.789-00',
+                'nome_associado': 'Fulano de Tal',
+                'data_vencimento': '2021-10-10',
+                'data_pagamento': '2021-10-10',
+                'valor': 100.0,
+                'tipo': 'Mensalidade',
+                'metodo': 'Pix',
+                'descricao': 'Pagamento da mensalidade de outubro'
+            },
+            {
+                'id_pagamento': 2,
+                'cpf_associado': '123.456.789-00',
+                'nome_associado': 'Fulano de Tal',
+                'data_vencimento': '2021-10-10',
+                'data_pagamento': '2021-10-10',
+                'valor': 100.0,
+                'tipo': 'Mensalidade',
+                'metodo': 'Pix',
+                'descricao': 'Pagamento da mensalidade de outubro'
+            }
+        ]
         today = datetime.today()
         return render_template('index.html',
                                form_data_member=form_data_member,
@@ -43,7 +77,23 @@ def inserir_associado():
 def editar_associado():
     try:
         foto = processar_foto(request.files.get('foto', request.form.get('foto-atual', None)))
-        associado = Associado(**request.form, foto=foto)
+
+        cpf = CPF(cpf=request.form.get('cpf'))
+        telefones = extrair_telefones(cpf)
+
+        associado = Associado(
+            cpf=cpf,
+            nome=request.form.get('nome'),
+            email=request.form.get('email'),
+            tipo=request.form.get('tipo'),
+            plano=request.form.get('plano'),
+            data_nascimento=request.form.get('data_nascimento'),
+            endereco=request.form.get('endereco'),
+            foto=foto,
+            telefones=telefones,
+            data_adesao=request.form.get('data_adesao')
+        )
+
         sucesso, mensagem = Gateway.editar_associado(associado)
         if sucesso:
             flash(mensagem, 'success')
@@ -52,7 +102,30 @@ def editar_associado():
         form_data_member = extrair_dados_formulario()
         flash(f'Ocorreu um erro ao atualizar o associado: {e}', 'danger-edit-member')
         associados = Gateway.listar_associados()
-        pagamentos = Gateway.listar_pagamentos()
+        pagamentos = [
+            {
+                'id_pagamento': 1,
+                'cpf_associado': '123.456.789-00',
+                'nome_associado': 'Fulano de Tal',
+                'data_vencimento': '2021-10-10',
+                'data_pagamento': '2021-10-10',
+                'valor': 100.0,
+                'tipo': 'Mensalidade',
+                'metodo': 'Pix',
+                'descricao': 'Pagamento da mensalidade de outubro'
+            },
+            {
+                'id_pagamento': 2,
+                'cpf_associado': '123.456.789-00',
+                'nome_associado': 'Fulano de Tal',
+                'data_vencimento': '2021-10-10',
+                'data_pagamento': '2021-10-10',
+                'valor': 100.0,
+                'tipo': 'Mensalidade',
+                'metodo': 'Pix',
+                'descricao': 'Pagamento da mensalidade de outubro'
+            }
+        ]
         today = datetime.today()
         return render_template('index.html',
                                form_data_member=form_data_member,

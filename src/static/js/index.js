@@ -50,11 +50,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const dataNascimento = errorMessageToInsert.getAttribute('data-data_nascimento');
             const tipo = errorMessageToInsert.getAttribute('data-tipo');
             const endereco = errorMessageToInsert.getAttribute('data-endereco');
-            const telefone = errorMessageToInsert.getAttribute('data-telefone');
+            const telefone1 = errorMessageToInsert.getAttribute('data-telefone1');
+            const telefone2 = errorMessageToInsert.getAttribute('data-telefone2');
             const email = errorMessageToInsert.getAttribute('data-email');
             const plano = errorMessageToInsert.getAttribute('data-plano');
-            console.log(cpf, nome, dataNascimento, tipo, endereco, telefone, email, plano);
-            preencherFormulario(cpf, nome, dataNascimento, tipo, endereco, telefone, email, plano);
+            preencherFormulario(cpf, nome, dataNascimento, tipo, endereco, telefone1, telefone2, email, plano);
             mostrarErroModal('addMemberModal', 'error-container-add', flashMessages.innerHTML);
             ajustarClassesMensagens();
         }
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert.classList.remove('show');
                 alert.classList.add('fade');
                 alert.style.display = 'none';
-            }, 5000);
+            }, 15000);
         });
     }
 

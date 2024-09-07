@@ -5,8 +5,8 @@ from flask import flash, redirect, url_for, render_template
 from src.gateway.gateway import Gateway
 
 
-def listar_pagamentos():
-    return Gateway.listar_pagamentos()
+# def listar_pagamentos():
+#     return Gateway.listar_pagamentos()
 
 
 def inserir_pagamento():
