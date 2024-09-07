@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         flashMessages.parentNode.removeChild(flashMessages);
+        fecharAlertasAutomaticamente();
     }
 
     const selectMember = document.getElementById("table-filter-member");
@@ -168,6 +169,18 @@ document.addEventListener('DOMContentLoaded', function () {
             const planoInput = form.querySelector('#plano');
             if (planoInput) planoInput.value = plano;
         }
+    }
+
+    function fecharAlertasAutomaticamente() {
+        const alerts = document.querySelectorAll('.alert-dismissible');
+
+        alerts.forEach(function (alert) {
+            setTimeout(function () {
+                alert.classList.remove('show');
+                alert.classList.add('fade');
+                alert.style.display = 'none';
+            }, 5000);
+        });
     }
 
     const addMemberModal = document.getElementById('addMemberModal');
