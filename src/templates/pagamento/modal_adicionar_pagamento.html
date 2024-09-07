@@ -21,8 +21,8 @@
                         <select id="cpf_pagamento" class="form-control" name="cpf_pagamento" required>
                             <option value="" disabled selected>Selecione um CPF</option>
                             {% for associado in associados %}
-                                <option value="{{ associado.cpf }}"
-                                        data-nome="{{ associado.nome }}">{{ associado.cpf }}</option>
+                                <option value="{{ associado.cpf.cpf }}"
+                                        data-nome="{{ associado.nome }}">{{ associado.cpf.cpf }}</option>
                             {% endfor %}
 
                         </select>
@@ -34,7 +34,7 @@
                             <option value="" disabled selected>Selecione um Nome</option>
                             {% for associado in associados %}
                                 <option value="{{ associado.nome }}"
-                                        data-cpf="{{ associado.cpf }}">{{ associado.nome }}</option>
+                                        data-cpf="{{ associado.cpf.cpf }}">{{ associado.nome }}</option>
                             {% endfor %}
 
                         </select>

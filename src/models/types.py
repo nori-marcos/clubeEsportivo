@@ -15,6 +15,7 @@ class CaseInsensitiveStrEnum(str, Enum):
                     return member
         return None
 
+
 class TipoDePlano(CaseInsensitiveStrEnum):
     OURO = 'OURO'
     PRATA = 'PRATA'
@@ -32,6 +33,11 @@ class StatusPagamento(CaseInsensitiveStrEnum):
     ATRASADO = 'ATRASADO'
 
 
+class StatusAssociado(CaseInsensitiveStrEnum):
+    ATIVO = 'ATIVO'
+    SUSPENSO = 'SUSPENSO'
+
+
 class Dinheiro:
     def __init__(self, valor: float | str):
         if isinstance(valor, str):
@@ -40,6 +46,7 @@ class Dinheiro:
 
     def __str__(self):
         return f'{self.valor:.2f}'
+
 
 class CPF(BaseModel):
     cpf: str
@@ -51,6 +58,7 @@ class CPF(BaseModel):
                .replace('-', ''))
         assert len(cpf) == 11 and cpf.isnumeric(), 'CPF deve ter 11 dígitos e ser numérico'
         return cpf
+
 
 class Telefone(BaseModel):
     dono: CPF

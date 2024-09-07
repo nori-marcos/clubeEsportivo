@@ -9,7 +9,8 @@
                      data-data_nascimento="{{ form_data_member.data_nascimento }}"
                      data-tipo="{{ form_data_member.tipo }}"
                      data-endereco="{{ form_data_member.endereco }}"
-                     data-telefone="{{ form_data_member.telefone }}"
+                     data-telefone1="{{ form_data_member.telefone1 }}"
+                     data-telefone2="{{ form_data_member.telefone2 }}"
                      data-email="{{ form_data_member.email }}"
                      data-plano="{{ form_data_member.plano }}">
                     {{ message }}
@@ -68,10 +69,10 @@
                         <tbody>
                         {% for associado in associados %}
                             <tr>
-                                <td>{{ associado.cpf }}</td>
+                                <td>{{ associado.cpf.cpf }}</td>
                                 <td>{{ associado.nome }}</td>
                                 <td>{{ associado.email }}</td>
-                                <td>{{ associado.telefone }}</td>
+                                <td>{{ associado.telefones[0].telefone }}</td>
                                 <td>{{ associado.data_adesao }}</td>
                                 <td>
                                     {% if associado.plano == 'OURO' %}
@@ -86,15 +87,15 @@
                                 <td>{{ associado.status }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                            data-target="#viewMemberModal{{ associado.cpf }}">
+                                            data-target="#viewMemberModal{{ associado.cpf.cpf }}">
                                         Detalhar
                                     </button>
                                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                                            data-target="#editMemberModal{{ associado.cpf }}"
-                                            data-cpf="{{ associado.cpf }}">
+                                            data-target="#editMemberModal{{ associado.cpf.cpf }}"
+                                            data-cpf="{{ associado.cpf.cpf }}">
                                         Editar
                                     </button>
-                                    <form action="{{ url_for('main.remover_associado', cpf_associado=associado.cpf) }}"
+                                    <form action="{{ url_for('main.remover_associado', cpf_associado=associado.cpf.cpf) }}"
                                           method="POST" style="display:inline;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" class="btn btn-danger btn-xs"

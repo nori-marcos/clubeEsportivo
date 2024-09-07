@@ -3,7 +3,7 @@ from typing import List
 
 from pydantic import BaseModel, Field, field_validator
 
-from src.models.types import Titularidade, TipoDePlano, Telefone, CPF
+from src.models.types import Titularidade, TipoDePlano, Telefone, CPF, StatusAssociado
 
 
 class Associado(BaseModel):
@@ -16,7 +16,8 @@ class Associado(BaseModel):
     endereco: str | None
     foto: str | None = Field(default=None)
     data_adesao: date = Field(default_factory=lambda: date.today())
-    telefones: List[Telefone] = []
+    status: StatusAssociado | None = Field(default=None)
+    telefones: List[Telefone] = Field(default_factory=list)
 
     @field_validator('data_nascimento', 'data_adesao', mode='before')
     def validar_datas(cls, data_input) -> date:

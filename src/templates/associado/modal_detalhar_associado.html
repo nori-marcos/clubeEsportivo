@@ -1,10 +1,10 @@
 <!-- Modal de detalhar para cada associado -->
-<div id="viewMemberModal{{ associado.cpf }}" class="modal fade" tabindex="-1" role="dialog"
-     aria-labelledby="viewMemberModalLabel{{ associado.cpf }}" aria-hidden="true">
+<div id="viewMemberModal{{ associado.cpf.cpf }}" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="viewMemberModalLabel{{ associado.cpf.cpf }}" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="viewMemberModalLabel{{ associado.cpf }}">Detalhes do Associado</h4>
+                <h4 class="modal-title" id="viewMemberModalLabel{{ associado.cpf.cpf }}">Detalhes do Associado</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -29,9 +29,9 @@
                             {% endif %}
                         </div>
                         <h5 class="card-title">{{ associado.nome }}</h5>
-                        <p class="card-text"><strong>CPF:</strong> {{ associado.cpf }}</p>
+                        <p class="card-text"><strong>CPF:</strong> {{ associado.cpf.cpf }}</p>
                         <p class="card-text"><strong>Email:</strong> {{ associado.email }}</p>
-                        <p class="card-text"><strong>Telefone:</strong> {{ associado.telefone }}</p>
+                        <p class="card-text"><strong>Telefone:</strong> {{ associado.telefone1 }}</p>
                         <p class="card-text"><strong>Data de Nascimento:</strong> {{ associado.data_nascimento }}</p>
                         <p class="card-text"><strong>Tipo:</strong> {{ associado.tipo.value }}</p>
                         <p class="card-text"><strong>Endereço:</strong> {{ associado.endereco }}</p>

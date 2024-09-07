@@ -1,4 +1,6 @@
 import base64
+from datetime import date
+from typing import List
 
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
@@ -6,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from src.exceptions.exceptions import CustomException
 from src.gateway import session_singleton
 from src.models.associado import Associado
-from src.models.types import TipoDePlano, Titularidade
+from src.models.types import Titularidade, TipoDePlano, CPF, Telefone
 
 session = session_singleton
 
@@ -82,25 +84,61 @@ class Gateway:
     def listar_associados():
         try:
             sql = text("""
-            SELECT cpf, nome, data_nascimento, endereco, telefone, email, tipo, plano, foto, data_adesao 
-            FROM associados
+            SELECT
+            a.cpf,
+            a.nome AS nome_associado,
+            a.foto,
+            a.data_adesao,
+            a.data_nascimento,
+            a.endereco,
+            a.email,
+            a.associado_titular,
+            a.contrato,
+            STRING_AGG(t.telefone, ', ') AS telefones,
+            p.nome AS nome_plano
+            FROM associados a
+            LEFT JOIN associados_telefones t ON a.cpf = t.associado
+            LEFT JOIN contratos c ON a.contrato = c.id_contrato
+            LEFT JOIN planos p ON c.plano = p.nome
+            GROUP BY 
+            a.cpf, 
+            a.nome, 
+            a.foto, 
+            a.data_adesao, 
+            a.data_nascimento, 
+            a.endereco, 
+            a.email,
+            a.associado_titular, 
+            a.contrato,
+            p.nome
             """)
+
             result = session.execute(sql)
             associados = []
             for row in result.mappings():
+                cpf: CPF = CPF(cpf=row['cpf'])
+                nome: str = row['nome_associado']
+                email: str = row['email']
+                tipo: Titularidade = Titularidade.DEPENDENTE if row['associado_titular'] else Titularidade.TITULAR
+                plano: TipoDePlano = TipoDePlano(row['nome_plano'].upper())
+                data_nascimento: date = row['data_nascimento']
+                endereco: str = row['endereco']
                 foto_memoryview = row['foto']
-                foto_base64 = base64.b64encode(foto_memoryview).decode('utf-8') if foto_memoryview else None
+                foto_base64: str = base64.b64encode(foto_memoryview).decode('utf-8') if foto_memoryview else None
+                data_adesao: date = row['data_adesao']
+                telefones: List[Telefone] = [Telefone(dono=cpf, telefone=numero.strip()) for numero in
+                                             row['telefones'].split(', ')]
                 associado = Associado(
-                    cpf=row['cpf'],
-                    nome=row['nome'],
-                    email=row['email'],
-                    telefone=row['telefone'],
-                    tipo=Titularidade(row['tipo']),
-                    data_nascimento=row['data_nascimento'],
-                    endereco=row['endereco'],
+                    cpf=cpf,
+                    nome=nome,
+                    email=email,
+                    tipo=tipo,
+                    plano=plano,
+                    data_nascimento=data_nascimento,
+                    endereco=endereco,
                     foto=foto_base64,
-                    data_adesao=row['data_adesao'],
-                    plano=TipoDePlano(row['plano'])
+                    data_adesao=data_adesao,
+                    telefones=telefones
                 )
                 associados.append(associado)
             return associados

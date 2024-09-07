@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $(modal).modal('show');
     }
 
-    function preencherFormulario(cpf, nome, dataNascimento, tipo, endereco, telefone, email, plano) {
+    function preencherFormulario(cpf, nome, dataNascimento, tipo, endereco, telefone1, telefone2, email, plano) {
         const form = document.getElementById('add-member-form');
         if (form) {
             const cpfInput = form.querySelector('#cpf');
@@ -160,8 +160,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const enderecoInput = form.querySelector('#endereco');
             if (enderecoInput) enderecoInput.value = endereco;
 
-            const telefoneInput = form.querySelector('#telefone');
-            if (telefoneInput) telefoneInput.value = telefone;
+            const telefoneInput = form.querySelector('#telefone1');
+            if (telefoneInput) telefoneInput.value = telefone1;
+
+            const telefone2Input = form.querySelector('#telefone2');
+            if (telefone2Input) telefone2Input.value = telefone2;
 
             const emailInput = form.querySelector('#email');
             if (emailInput) emailInput.value = email;

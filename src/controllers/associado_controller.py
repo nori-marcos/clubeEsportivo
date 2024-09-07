@@ -4,7 +4,7 @@ from flask import flash, render_template, redirect, url_for, request
 
 from src.gateway.gateway import Gateway
 from src.models.associado import Associado
-from src.models.types import CPF
+from src.models.types import CPF, Telefone
 from src.utils.arquivo_utils import processar_foto
 from src.utils.formulario_utils import extrair_dados_formulario
 
@@ -16,7 +16,12 @@ def listar_associados():
 def inserir_associado():
     try:
         foto = processar_foto(request.files.get('foto', None))
-        associado = Associado(**request.form, foto=foto)
+        telefone1_form = request.form.get('telefone1', None)
+        telefone1: Telefone = Telefone(telefone=telefone1_form, cpf=request.form.get('cpf')) if telefone1_form else None
+        telefone2_form = request.form.get('telefone2', None)
+        telefone2: Telefone = Telefone(telefone=telefone2_form, cpf=request.form.get('cpf')) if telefone2_form else None
+        telefones = [telefone1, telefone2] if telefone1 or telefone2 else []
+        associado = Associado(**request.form, foto=foto, telefones=telefones)
         sucesso, mensagem = Gateway.salvar_associado(associado)
         if sucesso:
             flash(mensagem, 'success')
