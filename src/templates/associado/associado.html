@@ -75,11 +75,11 @@
                                 <td>{{ associado.telefones[0].telefone }}</td>
                                 <td>{{ associado.data_adesao }}</td>
                                 <td>
-                                    {% if associado.plano == 'OURO' %}
+                                    {% if associado.plano.value == 'OURO' %}
                                         <span class="badge badge-pill badge-warning">ouro</span>
-                                    {% elif associado.plano == 'PRATA' %}
+                                    {% elif associado.plano.value == 'PRATA' %}
                                         <span class="badge badge-pill badge-secondary">prata</span>
-                                    {% elif associado.plano == 'BRONZE' %}
+                                    {% elif associado.plano.value == 'BRONZE' %}
                                         <span class="badge badge-pill"
                                               style="background-color: #cd7f32; color: white;">bronze</span>
                                     {% endif %}
