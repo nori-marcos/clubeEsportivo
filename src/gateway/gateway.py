@@ -4,7 +4,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
 from src.exceptions.exceptions import CustomException
-from src.gateway.postgres_session import session_singleton
+from src.gateway import session_singleton
 from src.models.associado import Associado
 from src.models.types import TipoDePlano, Titularidade
 
