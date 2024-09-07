@@ -1,49 +1,17 @@
 import base64
 
-from sqlalchemy import create_engine, LargeBinary
-from sqlalchemy import text, Table, Column, String, Date, MetaData
+from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import sessionmaker
 
-import config
 from src.exceptions.exceptions import CustomException
+from src.gateway.postgres_session import session_singleton
 from src.models.associado import Associado
 from src.models.types import TipoDePlano, Titularidade
 
-engine = create_engine(config.POSTGRES_DATABASE_URI)
-Session = sessionmaker(bind=engine)
-session = Session()
+session = session_singleton
 
 
 class Gateway:
-    metadata = MetaData()
-    associados_table = Table(
-        'associados', metadata,
-        Column('cpf', String(200), unique=True, nullable=False),
-        Column('nome', String(200), nullable=False),
-        Column('data_nascimento', Date),
-        Column('endereco', String(200)),
-        Column('telefone', String(15)),
-        Column('email', String(50)),
-        Column('tipo', String(50), nullable=False),
-        Column('plano', String(50), nullable=False),
-        Column('foto', LargeBinary),
-        Column('data_adesao', Date, nullable=False)
-    )
-
-    pagamentos_table = Table(
-        'pagamentos', metadata,
-        Column('id_pagamento', String(200), unique=True, nullable=False),
-        Column('data_vencimento', Date, nullable=False),
-        Column('data_pagamento', Date),
-        Column('valor', String(50), nullable=False),
-        Column('tipo', String(50), nullable=False),
-        Column('metodo', String(50), nullable=False),
-        Column('descricao', String(200), nullable=False)
-    )
-
-    metadata.create_all(engine)
-
     @staticmethod
     def salvar_associado(associado: Associado):
         try:
