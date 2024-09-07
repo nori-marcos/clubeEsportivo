@@ -18,9 +18,9 @@ CREATE TABLE IF NOT EXISTS esportes
 CREATE TABLE IF NOT EXISTS instalacoes
 (
     id_instalacao    integer PRIMARY KEY,
-    nome             varchar NOT NULL,
+    nome             varchar               NOT NULL,
     em_funcionamento boolean DEFAULT FALSE NOT NULL,
-    capacidade       integer DEFAULT 0 NOT NULL
+    capacidade       integer DEFAULT 0     NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS equipes
@@ -35,8 +35,8 @@ CREATE TABLE IF NOT EXISTS associados
     cpf               varchar(11) PRIMARY KEY,
     nome              varchar NOT NULL,
     foto              bytea,
-    data_adesao       date NOT NULL,
-    data_nascimento   date NOT NULL,
+    data_adesao       date    NOT NULL,
+    data_nascimento   date    NOT NULL,
     endereco          varchar NOT NULL,
     email             varchar NOT NULL,
     associado_titular varchar,
@@ -53,9 +53,9 @@ CREATE TABLE IF NOT EXISTS associados_telefones
 CREATE TABLE IF NOT EXISTS atestados
 (
     id_atestado              integer GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
-    associado                varchar NOT NULL,
-    data_emissao             date NOT NULL,
-    data_validade            date NOT NULL,
+    associado                varchar NOT NULL REFERENCES associados (cpf) ON DELETE CASCADE,
+    data_emissao             date    NOT NULL,
+    data_validade            date    NOT NULL,
     emitido_pelo_funcionario varchar NOT NULL,
     PRIMARY KEY (id_atestado, associado)
 );
@@ -63,17 +63,17 @@ CREATE TABLE IF NOT EXISTS atestados
 CREATE TABLE IF NOT EXISTS contratos
 (
     id_contrato  integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
-    data_inicio  date NOT NULL,
-    data_termino date NOT NULL,
+    data_inicio  date    NOT NULL,
+    data_termino date    NOT NULL,
     plano        varchar NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS pagamentos
 (
-    data_vencimento date NOT NULL,
-    contrato        integer NOT NULL,
+    data_vencimento date           NOT NULL,
+    contrato        integer        NOT NULL,
     valor           numeric(15, 2) NOT NULL,
-    data_pagamento  date NOT NULL,
+    data_pagamento  date           NOT NULL,
     PRIMARY KEY (data_vencimento, contrato)
 );
 
@@ -94,14 +94,14 @@ CREATE TABLE IF NOT EXISTS eventos
 CREATE TABLE IF NOT EXISTS funcionarios
 (
     cpf             varchar(11) PRIMARY KEY,
-    nome            varchar NOT NULL,
-    data_nascimento date NOT NULL,
-    data_admissao   date NOT NULL,
-    email           varchar NOT NULL,
+    nome            varchar        NOT NULL,
+    data_nascimento date           NOT NULL,
+    data_admissao   date           NOT NULL,
+    email           varchar        NOT NULL,
     salario         numeric(15, 2) NOT NULL,
-    endereco        varchar NOT NULL,
-    cargo           integer NOT NULL,
-    departamento    integer NOT NULL
+    endereco        varchar        NOT NULL,
+    cargo           integer        NOT NULL,
+    departamento    integer        NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS funcionarios_telefones
@@ -121,8 +121,8 @@ CREATE TABLE IF NOT EXISTS departamentos
 CREATE TABLE IF NOT EXISTS cargos
 (
     id_cargo     integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
-    nome         varchar NOT NULL,
-    descricao    varchar NOT NULL,
+    nome         varchar        NOT NULL,
+    descricao    varchar        NOT NULL,
     salario_base numeric(15, 2) NOT NULL
 );
 
@@ -130,14 +130,14 @@ CREATE TABLE IF NOT EXISTS cargos
 
 CREATE TABLE IF NOT EXISTS associados_equipes
 (
-    associado varchar REFERENCES associados (cpf),
+    associado varchar REFERENCES associados (cpf) ON DELETE CASCADE,
     equipe    integer REFERENCES equipes (id_equipe),
     PRIMARY KEY (associado, equipe)
 );
 
 CREATE TABLE IF NOT EXISTS associados_eventos
 (
-    associado varchar REFERENCES associados (cpf),
+    associado varchar REFERENCES associados (cpf) ON DELETE CASCADE,
     evento    integer REFERENCES eventos (id_evento),
     PRIMARY KEY (associado, evento)
 );
@@ -194,10 +194,10 @@ ALTER TABLE associados
     ADD FOREIGN KEY (contrato) REFERENCES contratos (id_contrato) MATCH FULL;
 
 ALTER TABLE associados
-    ADD FOREIGN KEY (associado_titular) REFERENCES associados (cpf) MATCH FULL;
+    ADD FOREIGN KEY (associado_titular) REFERENCES associados (cpf) MATCH FULL ON DELETE CASCADE;
 
 ALTER TABLE associados_telefones
-    ADD FOREIGN KEY (associado) REFERENCES associados (cpf) MATCH FULL;
+    ADD FOREIGN KEY (associado) REFERENCES associados (cpf) MATCH FULL ON DELETE CASCADE;
 
 ALTER TABLE atestados
     ADD FOREIGN KEY (associado) REFERENCES associados (cpf) MATCH FULL;
