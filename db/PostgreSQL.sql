@@ -35,7 +35,8 @@ CREATE TABLE IF NOT EXISTS associados (
     data_nascimento date,
     endereco varchar,
     email varchar,
-    associado_titular varchar
+    associado_titular varchar,
+    contrato integer NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS associados_telefones (
@@ -47,15 +48,14 @@ CREATE TABLE IF NOT EXISTS associados_telefones (
 CREATE TABLE IF NOT EXISTS atestados (
     id_atestado integer GENERATED ALWAYS AS IDENTITY,
     associado varchar,
-    data_emissao date NOT NULL,
-    data_validade date NOT NULL,
+    data_emissao date,
+    data_validade date,
     emitido_pelo_funcionario varchar,
     PRIMARY KEY (id_atestado, associado)
 );
 
 CREATE TABLE IF NOT EXISTS contratos (
     id_contrato integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    associado_contratante varchar,
     data_inicio date,
     data_termino date,
     plano varchar NOT NULL
@@ -89,8 +89,8 @@ CREATE TABLE IF NOT EXISTS funcionarios (
     email varchar,
     salario numeric(15,2),
     endereco varchar,
-    cargo integer,
-    departamento integer
+    cargo integer NOT NULL,
+    departamento integer NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS funcionarios_telefones (
@@ -163,10 +163,13 @@ CREATE TABLE IF NOT EXISTS instalacoes_esportes (
 );
 
 
------------------------------------ 1-N -----------------------------------
+-------------------------------- 1-N & FK --------------------------------
 
 ALTER TABLE equipes
 ADD FOREIGN KEY (esporte_praticado) REFERENCES esportes (id_esporte) MATCH FULL;
+
+ALTER TABLE associados
+ADD FOREIGN KEY (contrato) REFERENCES contratos (id_contrato) MATCH FULL;
 
 ALTER TABLE associados
 ADD FOREIGN KEY (associado_titular) REFERENCES associados (cpf) MATCH FULL;
@@ -179,9 +182,6 @@ ADD FOREIGN KEY (associado) REFERENCES associados (cpf) MATCH FULL;
 
 ALTER TABLE atestados
 ADD FOREIGN KEY (emitido_pelo_funcionario) REFERENCES funcionarios (cpf) MATCH FULL;
-
-ALTER TABLE contratos
-ADD FOREIGN KEY (associado_contratante) REFERENCES associados (cpf) MATCH FULL;
 
 ALTER TABLE contratos
 ADD FOREIGN KEY (plano) REFERENCES planos (nome) MATCH FULL;

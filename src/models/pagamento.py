@@ -2,14 +2,12 @@ from datetime import date
 
 from pydantic import BaseModel, Field
 
-from src.models.types import StatusPagamento, MetodoPagamento
+from src.models.types import StatusPagamento, Dinheiro
 
 
 class Pagamento(BaseModel):
-    cpf_associado: str
-    nome_associado: str
-    valor: float
-    metodo: MetodoPagamento
-    data_pagamento: date | None = Field()
+    contrato: int
     data_vencimento: date
-    status: StatusPagamento
+    data_pagamento: date | None = None
+    valor: Dinheiro
+    status: StatusPagamento = StatusPagamento('PENDENTE')

@@ -9,7 +9,7 @@ Associados e funcionários têm como chave primária o CPF. Como identificador d
 um número serial autoincrementado.
 
 O sistema será desenvolvido utilizando a linguagem de programação Python `3.12` - framework Flask - e o banco de dados PostgreSQL. A
-interface do usuário será web."
+interface do usuário é web, baseada em blueprint e views do próprio Flask.
 
 ## Como executar o projeto
 

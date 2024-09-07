@@ -4,6 +4,7 @@ from flask import flash, render_template, redirect, url_for, request
 
 from src.gateway.gateway import Gateway
 from src.models.associado import Associado
+from src.models.types import CPF
 from src.utils.arquivo_utils import processar_foto
 from src.utils.formulario_utils import extrair_dados_formulario
 
@@ -56,7 +57,7 @@ def editar_associado():
                                form_data_payment={})
 
 
-def remover_associado(cpf):
+def remover_associado(cpf: CPF):
     try:
         sucesso, mensagem = Gateway.remover_associado(cpf)
         if sucesso:

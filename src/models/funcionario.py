@@ -3,20 +3,21 @@ from typing import List
 
 from pydantic import BaseModel, Field, field_validator
 
-from src.models.types import Titularidade, TipoDePlano, Telefone, CPF
+from src.models.types import Telefone, Dinheiro, CPF
 
 
-class Associado(BaseModel):
+class Funcionario(BaseModel):
     cpf: CPF
-    nome: str = Field(min_length=1)
-    email: str = Field(pattern=r'^\S+@\S+\.\S+$')
-    tipo: Titularidade
-    plano: TipoDePlano
-    data_nascimento: date | None
-    endereco: str | None
-    foto: str | None = Field(default=None)
-    data_adesao: date = Field(default_factory=lambda: date.today())
+    nome: str | None = None
+    data_nascimento: date | None = None
+    data_admissao: date | None = None
+    email: str = Field(pattern=r'^\S+@\S+\.\S+$', default=None)
+    salario: Dinheiro | None = None
+    endereco: str | None = None
+    cargo: int
+    departamento: int
     telefones: List[Telefone] = []
+
 
     @field_validator('data_nascimento', 'data_adesao', mode='before')
     def validar_datas(cls, data_input) -> date:
