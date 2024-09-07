@@ -98,7 +98,7 @@
                                     <form action="{{ url_for('main.remover_associado', cpf_associado=associado.cpf.cpf) }}"
                                           method="POST" style="display:inline;">
                                         <input type="hidden" name="_method" value="DELETE">
-                                        <button type="submit" class="btn btn-danger btn-xs"
+                                        <button type="submit" class="btn btn-danger btn-sm"
                                                 onclick="return confirm('Você tem certeza que deseja deletar?')">
                                             Deletar
                                         </button>
