@@ -63,24 +63,44 @@ class Gateway:
     @staticmethod
     def editar_associado(associado):
         try:
-            sql = text("""
-            UPDATE associados
-            SET cpf = :cpf, nome = :nome, data_nascimento = :data_nascimento, endereco = :endereco, telefone = :telefone, email = :email, tipo = :tipo, plano = :plano, foto = :foto, data_adesao = :data_adesao
+            cpf = associado.cpf.cpf
+
+            sql_select = text("""
+            SELECT nome, data_nascimento, endereco, email, associado_titular, contrato, foto, data_adesao
+            FROM associados
             WHERE cpf = :cpf
             """)
-            foto_bytes = base64.b64decode(associado.foto) if associado.foto else None
-            session.execute(sql, {
-                'cpf': associado.cpf,
-                'nome': associado.nome,
-                'data_nascimento': associado.data_nascimento,
-                'endereco': associado.endereco,
-                'telefone': associado.telefone,
-                'email': associado.email,
-                'tipo': associado.tipo,
-                'foto': foto_bytes,
-                'data_adesao': associado.data_adesao,
-                'plano': associado.plano
-            })
+
+            result = session.execute(sql_select, {'cpf': cpf})
+
+            for row in result.mappings():
+                nome = associado.nome if associado.nome else row['nome']
+                data_nascimento = associado.data_nascimento if associado.data_nascimento else row['data_nascimento']
+                endereco = associado.endereco if associado.endereco else row['endereco']
+                email = associado.email if associado.email else row['email']
+                associado_titular = row['associado_titular']
+                contrato = row['contrato']
+                foto = base64.b64decode(associado.foto) if associado.foto else None
+                data_adesao = row['data_adesao']
+
+                sql_update = text("""
+                UPDATE associados
+                SET nome = :nome, data_nascimento = :data_nascimento, endereco = :endereco, email = :email, associado_titular = :associado_titular, contrato = :contrato, foto = :foto, data_adesao = :data_adesao
+                WHERE cpf = :cpf
+                """)
+
+                session.execute(sql_update, {
+                    'cpf': cpf,
+                    'nome': nome,
+                    'data_nascimento': data_nascimento,
+                    'endereco': endereco,
+                    'email': email,
+                    'associado_titular': associado_titular,
+                    'contrato': contrato,
+                    'foto': foto,
+                    'data_adesao': data_adesao
+
+                })
             session.commit()
             return True, "Associado atualizado com sucesso!"
 
