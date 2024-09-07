@@ -4,6 +4,7 @@ from typing import List
 from pydantic import BaseModel, Field, field_validator
 
 from src.models.types import Titularidade, TipoDePlano, Telefone, CPF, StatusAssociado
+from src.utils.arquivo_utils import validar_foto_base64
 
 
 class Associado(BaseModel):
@@ -35,4 +36,6 @@ class Associado(BaseModel):
 
     @field_validator('foto', mode='before')
     def validar_foto(cls, foto_input: str | None) -> str | None:
-        return foto_input
+        if validar_foto_base64(foto_input):
+            return foto_input
+        return None
