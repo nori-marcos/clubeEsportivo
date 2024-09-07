@@ -12,33 +12,33 @@
 CREATE TABLE IF NOT EXISTS esportes
 (
     id_esporte integer PRIMARY KEY,
-    nome       varchar
+    nome       varchar NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS instalacoes
 (
     id_instalacao    integer PRIMARY KEY,
-    nome             varchar,
-    em_funcionamento boolean DEFAULT FALSE,
+    nome             varchar NOT NULL,
+    em_funcionamento boolean DEFAULT FALSE NOT NULL,
     capacidade       integer DEFAULT 0 NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS equipes
 (
     id_equipe         integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
-    nome              varchar,
+    nome              varchar NOT NULL,
     esporte_praticado integer NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS associados
 (
     cpf               varchar(11) PRIMARY KEY,
-    nome              varchar,
+    nome              varchar NOT NULL,
     foto              bytea,
-    data_adesao       date,
-    data_nascimento   date,
-    endereco          varchar,
-    email             varchar,
+    data_adesao       date NOT NULL,
+    data_nascimento   date NOT NULL,
+    endereco          varchar NOT NULL,
+    email             varchar NOT NULL,
     associado_titular varchar,
     contrato          integer NOT NULL
 );
@@ -53,34 +53,34 @@ CREATE TABLE IF NOT EXISTS associados_telefones
 CREATE TABLE IF NOT EXISTS atestados
 (
     id_atestado              integer GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
-    associado                varchar,
-    data_emissao             date,
-    data_validade            date,
-    emitido_pelo_funcionario varchar,
+    associado                varchar NOT NULL,
+    data_emissao             date NOT NULL,
+    data_validade            date NOT NULL,
+    emitido_pelo_funcionario varchar NOT NULL,
     PRIMARY KEY (id_atestado, associado)
 );
 
 CREATE TABLE IF NOT EXISTS contratos
 (
     id_contrato  integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
-    data_inicio  date,
-    data_termino date,
+    data_inicio  date NOT NULL,
+    data_termino date NOT NULL,
     plano        varchar NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS pagamentos
 (
-    data_vencimento date,
-    contrato        integer,
+    data_vencimento date NOT NULL,
+    contrato        integer NOT NULL,
     valor           numeric(15, 2) NOT NULL,
-    data_pagamento  date,
+    data_pagamento  date NOT NULL,
     PRIMARY KEY (data_vencimento, contrato)
 );
 
 CREATE TABLE IF NOT EXISTS planos
 (
     nome  varchar PRIMARY KEY,
-    valor numeric(15, 2)
+    valor numeric(15, 2) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS eventos
@@ -94,12 +94,12 @@ CREATE TABLE IF NOT EXISTS eventos
 CREATE TABLE IF NOT EXISTS funcionarios
 (
     cpf             varchar(11) PRIMARY KEY,
-    nome            varchar,
-    data_nascimento date,
-    data_admissao   date,
-    email           varchar,
-    salario         numeric(15, 2),
-    endereco        varchar,
+    nome            varchar NOT NULL,
+    data_nascimento date NOT NULL,
+    data_admissao   date NOT NULL,
+    email           varchar NOT NULL,
+    salario         numeric(15, 2) NOT NULL,
+    endereco        varchar NOT NULL,
     cargo           integer NOT NULL,
     departamento    integer NOT NULL
 );
@@ -122,8 +122,8 @@ CREATE TABLE IF NOT EXISTS cargos
 (
     id_cargo     integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
     nome         varchar NOT NULL,
-    descricao    varchar,
-    salario_base numeric(15, 2)
+    descricao    varchar NOT NULL,
+    salario_base numeric(15, 2) NOT NULL
 );
 
 ----------------------------------- N-N -----------------------------------
