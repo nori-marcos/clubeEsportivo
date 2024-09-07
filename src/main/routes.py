@@ -8,7 +8,7 @@ from src.main import bp
 
 @bp.route('/')
 def index():
-    associados = associado_controller.listar_todos()
+    associados = associado_controller.listar_associados()
     today = datetime.today()
     return render_template('index.html', associados=associados, today=today, form_data={})
 

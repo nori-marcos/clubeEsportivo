@@ -15,7 +15,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-class AssociadoGateway:
+class Gateway:
     metadata = MetaData()
     associados_table = Table(
         'associados', metadata,
@@ -33,7 +33,7 @@ class AssociadoGateway:
     metadata.create_all(engine)
 
     @staticmethod
-    def salvar(associado: Associado):
+    def salvar_associado(associado: Associado):
         try:
             sql = text("""
             INSERT INTO associados (cpf, nome, data_nascimento, endereco, telefone, email, tipo, plano, foto, data_adesao)
@@ -67,7 +67,7 @@ class AssociadoGateway:
                 raise CustomException(f"Erro no banco de dados: {e}")
 
     @staticmethod
-    def editar(associado):
+    def editar_associado(associado):
         try:
             sql = text("""
             UPDATE associados
@@ -99,7 +99,7 @@ class AssociadoGateway:
                 raise CustomException(f"Erro no banco de dados: {e}")
 
     @staticmethod
-    def listar_todos():
+    def listar_associados():
         try:
             sql = text("""
             SELECT cpf, nome, data_nascimento, endereco, telefone, email, tipo, plano, foto, data_adesao 
@@ -133,7 +133,7 @@ class AssociadoGateway:
                 raise CustomException(f"Erro no banco de dados: {e}")
 
     @staticmethod
-    def remover(cpf):
+    def remover_associado(cpf):
         try:
             sql = text("""
             DELETE FROM associados
