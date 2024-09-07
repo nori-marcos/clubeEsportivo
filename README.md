@@ -8,8 +8,8 @@ projeto.
 Associados e funcionários têm como chave primária o CPF. Como identificador das tuplas nas demais tabelas, foi utilizado
 um número serial autoincrementado.
 
-O sistema será desenvolvido utilizando a linguagem de programação Python `3.12` - framework Flask - e o banco de dados PostgreSQL. A
-interface do usuário é web, baseada em blueprint e views do próprio Flask.
+O sistema será desenvolvido utilizando a linguagem de programação Python `3.12` - framework Flask - e o banco de dados
+PostgreSQL. A interface do usuário é web, baseada em blueprint e views do próprio Flask.
 
 ## Como executar o projeto
 
@@ -59,7 +59,52 @@ O diagrama foi criado usando a ferramenta de tabelas do PyCharm.
 
 # Exemplos de Consulta em Algebra relacional
 
-lorem ipsum
+### Exemplo 1
+
+Uma lista de todos os titulares com pagamentos irregulares e seus telefones.
+
+```sql
+SELECT a.cpf, a.nome, p.contrato, p.data_vencimento, t.telefone
+FROM (SELECT * FROM associados WHERE associado_titular IS NULL) AS a
+         INNER JOIN (SELECT contrato, data_vencimento
+                     FROM pagamentos
+                     WHERE (data_vencimento < data_pagamento)
+                        or (data_pagamento IS NULL))AS p
+                    ON (p.contrato = a.contrato)
+         LEFT JOIN associados_telefones AS t
+                   ON (t.associado = a.cpf);
+```
+
+Com algebra relacional:
+
+$\pi_{(a.cpf, a.nome, p.contrato, p.data\_vencimento, t.telefone)}
+(\sigma_{p.data\_vencimento < p.data\_pagamento\ OR\ data\_pagamento = null}
+(\rho_{a}(associados) \times \rho_{p(contrato, data\_vencimento)} (pagamentos) \times \rho_{t} (telefones)))$
+
+$\vartriangleright\circ\vartriangleleft$
+### Exemplo 2
+
+Explicação loremipsum
+
+```sql
+
+```
+
+Com algebra relacional:
+
+$\pi$
+
+### Exemplo 3
+
+Explicação loremipsum
+
+```sql
+
+```
+
+Com algebra relacional:
+
+$\pi$
 
 # Avaliação das formas normais
 
@@ -77,5 +122,4 @@ sequenceDiagram
 ```
 
 O Projeto com seus vários módulos possui um padrão de arquitetura baseada em Model View Controller (MVC). A camada
-`Gateway`
-funciona como Data Access Object (DAO), abstraindo o acesso ao banco de dados.
+`Gateway` funciona como Data Access Object (DAO), abstraindo o acesso ao banco de dados.

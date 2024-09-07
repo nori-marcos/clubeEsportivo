@@ -229,11 +229,14 @@ ALTER TABLE departamentos
 CREATE PROCEDURE associados_com_pagamentos_irregulares()
     LANGUAGE sql AS
 $$
-SELECT titulares.cpf, titulares.nome, contratos.contrato, contratos.data_vencimento
+SELECT titulares.cpf, titulares.nome, pagamentos.contrato, pagamentos.data_vencimento, telefones.telefone
 FROM (SELECT * FROM associados WHERE associado_titular IS NULL) AS titulares
-         inner join (SELECT contrato, data_vencimento
+         INNER JOIN (SELECT contrato, data_vencimento
                      FROM pagamentos
-                     WHERE (data_vencimento < data_pagamento)
-                        or (data_pagamento IS NULL)) AS contratos
-                    ON (contratos.contrato = titulares.contrato);
+--                      WHERE (data_vencimento < data_pagamento)
+--                         or (data_pagamento IS NULL)
+                     ) AS pagamentos
+                    ON (pagamentos.contrato = titulares.contrato)
+         LEFT JOIN associados_telefones AS telefones
+                    ON (telefones.associado = titulares.cpf);
 $$
