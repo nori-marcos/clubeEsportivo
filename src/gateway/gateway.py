@@ -30,6 +30,18 @@ class Gateway:
         Column('foto', LargeBinary),
         Column('data_adesao', Date, nullable=False)
     )
+
+    pagamentos_table = Table(
+        'pagamentos', metadata,
+        Column('id_pagamento', String(200), unique=True, nullable=False),
+        Column('data_vencimento', Date, nullable=False),
+        Column('data_pagamento', Date),
+        Column('valor', String(50), nullable=False),
+        Column('tipo', String(50), nullable=False),
+        Column('metodo', String(50), nullable=False),
+        Column('descricao', String(200), nullable=False)
+    )
+
     metadata.create_all(engine)
 
     @staticmethod
@@ -149,5 +161,34 @@ class Gateway:
             erro_original = getattr(e, 'orig', None)
             if erro_original:
                 raise CustomException(f"Erro ao remover o associado: {erro_original}")
+            else:
+                raise CustomException(f"Erro no banco de dados: {e}")
+
+    @staticmethod
+    def listar_pagamentos():
+        try:
+            sql = text("""
+            SELECT id_pagamento, data_vencimento, data_pagamento, valor, tipo, metodo, descricao
+            FROM pagamentos
+            """)
+            result = session.execute(sql)
+            pagamentos = []
+            for row in result.mappings():
+                pagamento = {
+                    'id_pagamento': row['id_pagamento'],
+                    'data_vencimento': row['data_vencimento'],
+                    'data_pagamento': row['data_pagamento'],
+                    'valor': row['valor'],
+                    'tipo': row['tipo'],
+                    'metodo': row['metodo'],
+                    'descricao': row['descricao']
+                }
+                pagamentos.append(pagamento)
+            return pagamentos
+        except SQLAlchemyError as e:
+            session.rollback()
+            erro_original = getattr(e, 'orig', None)
+            if erro_original:
+                raise CustomException(f"Erro ao listar os pagamentos: {erro_original}")
             else:
                 raise CustomException(f"Erro no banco de dados: {e}")

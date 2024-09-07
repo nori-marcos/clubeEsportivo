@@ -7,6 +7,7 @@ from src.models.types import StatusPagamento, MetodoPagamento
 
 class Pagamento(BaseModel):
     cpf_associado: str
+    nome_associado: str
     valor: float
     metodo: MetodoPagamento
     data_pagamento: date | None = Field()

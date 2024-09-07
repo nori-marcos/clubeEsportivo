@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import flash, render_template, redirect, url_for, request
 
-from src.gateway.associado_gateway import Gateway
+from src.gateway.gateway import Gateway
 from src.models.associado import Associado
 from src.utils.arquivo_utils import processar_foto
 from src.utils.formulario_utils import extrair_dados_formulario
@@ -21,11 +21,17 @@ def inserir_associado():
             flash(mensagem, 'success')
         return redirect(url_for('main.index'))
     except Exception as e:
-        form_data = extrair_dados_formulario()
-        flash(f'Ocorreu um erro ao adicionar o associado: {e}', 'danger-insert')
+        form_data_member = extrair_dados_formulario()
+        flash(f'Ocorreu um erro ao adicionar o associado: {e}', 'danger-insert-member')
         associados = Gateway.listar_associados()
+        pagamentos = Gateway.listar_pagamentos()
         today = datetime.today()
-        return render_template('index.html', form_data=form_data, today=today, associados=associados)
+        return render_template('index.html',
+                               form_data_member=form_data_member,
+                               today=today,
+                               associados=associados,
+                               pagamentos=pagamentos,
+                               form_data_payment={})
 
 
 def editar_associado():
@@ -37,11 +43,17 @@ def editar_associado():
             flash(mensagem, 'success')
             return redirect(url_for('main.index'))
     except Exception as e:
-        form_data = extrair_dados_formulario()
-        flash(f'Ocorreu um erro ao atualizar o associado: {e}', 'danger-edit')
+        form_data_member = extrair_dados_formulario()
+        flash(f'Ocorreu um erro ao atualizar o associado: {e}', 'danger-edit-member')
         associados = Gateway.listar_associados()
+        pagamentos = Gateway.listar_pagamentos()
         today = datetime.today()
-        return render_template('index.html', form_data=form_data, today=today, associados=associados)
+        return render_template('index.html',
+                               form_data_member=form_data_member,
+                               today=today,
+                               associados=associados,
+                               pagamentos=pagamentos,
+                               form_data_payment={})
 
 
 def remover_associado(cpf):
@@ -51,5 +63,5 @@ def remover_associado(cpf):
             flash(mensagem, 'success')
             return redirect(url_for('main.index'))
     except Exception as e:
-        flash(f'Ocorreu um erro ao remover o associado: {e}', 'danger-remove')
+        flash(f'Ocorreu um erro ao remover o associado: {e}', 'danger-remove-member')
         return redirect(url_for('main.index'))

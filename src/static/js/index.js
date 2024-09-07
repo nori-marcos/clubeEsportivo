@@ -6,14 +6,43 @@ document.getElementById('btn-clear').addEventListener('click', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
+
+    restaurarEstadoAccordions();
+
+    const accordionToggles = document.querySelectorAll('[data-toggle="collapse"]');
+
+    accordionToggles.forEach(function (toggle) {
+        toggle.addEventListener('click', function () {
+            const targetAccordionId = toggle.getAttribute('data-target').substring(1); // remove o "#" do ID
+
+            if (document.getElementById(targetAccordionId).classList.contains('show')) {
+                removerEstadoAccordion(targetAccordionId);
+            } else {
+                salvarEstadoAccordion(targetAccordionId);
+            }
+        });
+    });
+
+    const submited_form = document.querySelector('form');
+    if (submited_form) {
+        submited_form.addEventListener('submit', function () {
+            accordionToggles.forEach(function (toggle) {
+                const targetAccordionId = toggle.getAttribute('data-target').substring(1);
+                if (document.getElementById(targetAccordionId).classList.contains('show')) {
+                    salvarEstadoAccordion(targetAccordionId);
+                }
+            });
+        });
+    }
+
     const flashMessages = document.getElementById('flash-messages');
     const flashContainer = document.getElementById('flash-container');
 
     if (flashMessages) {
         const successMessage = document.querySelector('.alert-success');
-        const errorMessageToInsert = document.querySelector('.alert-danger-insert');
-        const errorMessageToEdit = document.querySelector('.alert-danger-edit');
-        const errorMessageToDelete = document.querySelector('.alert-danger-remove');
+        const errorMessageToInsert = document.querySelector('.alert-danger-insert-member');
+        const errorMessageToEdit = document.querySelector('.alert-danger-edit-member');
+        const errorMessageToDelete = document.querySelector('.alert-danger-remove-member');
 
         if (errorMessageToInsert) {
             const cpf = errorMessageToInsert.getAttribute('data-cpf');
@@ -28,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
             preencherFormulario(cpf, nome, dataNascimento, tipo, endereco, telefone, email, plano);
             mostrarErroModal('addMemberModal', 'error-container-add', flashMessages.innerHTML);
             ajustarClassesMensagens();
-            manterAccordionAberto();
         }
 
         if (errorMessageToEdit) {
@@ -36,14 +64,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const nomeModal = `editMemberModal${cpf}`;
             mostrarErroModal(nomeModal, 'error-container-edit', flashMessages.innerHTML);
             ajustarClassesMensagens();
-            manterAccordionAberto();
         }
 
         if (successMessage || errorMessageToDelete) {
             $('.modal').modal('hide');
             flashContainer.innerHTML = flashMessages.innerHTML;
             ajustarClassesMensagens();
-            manterAccordionAberto();
         }
 
         flashMessages.parentNode.removeChild(flashMessages);
@@ -82,11 +108,30 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function manterAccordionAberto() {
-        const accordionContent = document.getElementById('collapseOne');
-        if (accordionContent) {
-            accordionContent.classList.add('show');
+    function salvarEstadoAccordion(accordionId) {
+        let accordionsAbertos = JSON.parse(sessionStorage.getItem('accordionsAbertos')) || [];
+
+        if (!accordionsAbertos.includes(accordionId)) {
+            accordionsAbertos.push(accordionId);
+            sessionStorage.setItem('accordionsAbertos', JSON.stringify(accordionsAbertos));
         }
+    }
+
+    function removerEstadoAccordion(accordionId) {
+        let accordionsAbertos = JSON.parse(sessionStorage.getItem('accordionsAbertos')) || [];
+        accordionsAbertos = accordionsAbertos.filter(id => id !== accordionId);
+        sessionStorage.setItem('accordionsAbertos', JSON.stringify(accordionsAbertos));
+    }
+
+    function restaurarEstadoAccordions() {
+        let accordionsAbertos = JSON.parse(sessionStorage.getItem('accordionsAbertos')) || [];
+
+        accordionsAbertos.forEach(function (accordionId) {
+            const accordionContent = document.getElementById(accordionId);
+            if (accordionContent) {
+                accordionContent.classList.add('show');
+            }
+        });
     }
 
     function mostrarErroModal(modalId, containerId, messageHTML) {

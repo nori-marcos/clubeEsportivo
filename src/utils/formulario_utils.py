@@ -7,15 +7,15 @@ from src.utils.arquivo_utils import processar_foto
 
 
 def extrair_dados_formulario():
-    form_data = {}
+    form_data_member = {}
     if 'data_adesao' in request.form:
-        form_data['data_adesao'] = request.form['data_adesao']
+        form_data_member['data_adesao'] = request.form['data_adesao']
     campos = ['cpf', 'nome', 'data_nascimento', 'tipo', 'endereco', 'telefone', 'email', 'plano']
     for campo in campos:
         campo_valor = extrair_campos_formulario(campo)
         if campo_valor is not None:
-            form_data[campo] = campo_valor
-    return form_data
+            form_data_member[campo] = campo_valor
+    return form_data_member
 
 
 def extrair_campos_formulario(campo: str):
