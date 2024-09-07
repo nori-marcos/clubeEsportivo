@@ -11,13 +11,13 @@
 
 CREATE TABLE IF NOT EXISTS esportes
 (
-    id_esporte integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id_esporte integer PRIMARY KEY,
     nome       varchar
 );
 
 CREATE TABLE IF NOT EXISTS instalacoes
 (
-    id_instalacao    integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id_instalacao    integer PRIMARY KEY,
     nome             varchar,
     em_funcionamento boolean DEFAULT FALSE,
     capacidade       integer DEFAULT 0 NOT NULL
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS instalacoes
 
 CREATE TABLE IF NOT EXISTS equipes
 (
-    id_equipe         integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id_equipe         integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
     nome              varchar,
     esporte_praticado integer NOT NULL
 );
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS associados_telefones
 
 CREATE TABLE IF NOT EXISTS atestados
 (
-    id_atestado              integer GENERATED ALWAYS AS IDENTITY,
+    id_atestado              integer GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
     associado                varchar,
     data_emissao             date,
     data_validade            date,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS atestados
 
 CREATE TABLE IF NOT EXISTS contratos
 (
-    id_contrato  integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id_contrato  integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
     data_inicio  date,
     data_termino date,
     plano        varchar NOT NULL
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS planos
 
 CREATE TABLE IF NOT EXISTS eventos
 (
-    id_evento integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id_evento integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
     nome      varchar NOT NULL,
     data      date    NOT NULL,
     descricao varchar
@@ -113,14 +113,14 @@ CREATE TABLE IF NOT EXISTS funcionarios_telefones
 
 CREATE TABLE IF NOT EXISTS departamentos
 (
-    id_departamento integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id_departamento integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
     nome            varchar NOT NULL,
     localizacao     integer
 );
 
 CREATE TABLE IF NOT EXISTS cargos
 (
-    id_cargo     integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id_cargo     integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
     nome         varchar NOT NULL,
     descricao    varchar,
     salario_base numeric(15, 2)
