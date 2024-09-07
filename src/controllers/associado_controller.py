@@ -76,11 +76,15 @@ def inserir_associado():
 
 def editar_associado():
     try:
+        foto_final = None
+
         foto_associado = request.form.get('foto_atual')
-        foto_nova = request.files.get('foto', None)
+        foto_nova = processar_foto(request.files.get('foto', None))
 
         if foto_nova:
-            foto_associado = processar_foto(foto_nova)
+            foto_final = foto_nova
+        elif foto_associado:
+            foto_final = foto_associado
 
         cpf = CPF(cpf=request.form.get('cpf'))
         telefones = extrair_telefones(cpf)
@@ -93,7 +97,7 @@ def editar_associado():
             plano=request.form.get('plano'),
             data_nascimento=request.form.get('data_nascimento'),
             endereco=request.form.get('endereco'),
-            foto=foto_associado,
+            foto=foto_final,
             telefones=telefones,
             data_adesao=request.form.get('data_adesao')
         )
