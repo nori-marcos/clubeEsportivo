@@ -81,10 +81,18 @@ O projeto foi desenvolvido de acordo com a Terceira Forma Normal (3FN), o que im
 
 3. Tabela `cargos`:
 - 1FN: A tabela possui apenas valores atômicos, sem atributos multivalorados.
-- 2FN: A tabela possui chave candidata `{id_cargo}` e os atributos `nome`, `descricao` e `salario_base` são complementos da chave e totalmente dependentes da chave candidata. Ou seja, para cada `{id_cargo}` define funcionalmente um único valor para `nome`, `descricao` e `salario_base`.
+- 2FN: A tabela possui chave candidata `{id_cargo}` e os atributos `nome`, `descricao` e `salario_base` são complementos da chave e totalmente funcionalmente dependentes da chave candidata. Ou seja, para cada `{id_cargo}` define funcionalmente um único valor para `nome`, `descricao` e `salario_base`.
 - 3FN: Os atributos não chave `nome`, `descricao` e `salario_base` são dependentes não-transitivos da chave candidata `{id_cargo}`. Ou seja, um atributo não chave não pode definir funcionalmente outro atributo não chave.
 
+4. Tabela `eventos`:
+- 1FN: A tabela possui apenas valores atômicos, sem atributos multivalorados.
+- 2FN: A tabela possui chave candidata `{id_evento}` e os atributos `nome`, `data` e `descricao` são complementos da chave e totalmente funcionalmente dependentes daquela chave.
+- 3FN: Os atributos não chave `nome`, `data` e `descricao` são dependentes não-transitivos da chave candidata `{id_evento}`.
 
+5. Tabela `instalacoes`:
+- 1FN: A tabela possui apenas valores atômicos, sem atributos multivalorados.
+- 2FN: A tabela possui chave candidata `{id_instalacao}` e os atributos `nome`, `em_funcionamento` e `capacidade` são complementos da chave e totalmente funcionalmente dependentes daquela chave.
+- 3FN: Os atributos não chave `nome`, `em_funcionamento` e `capacidade` são dependentes não-transitivos da chave candidata `{id_instalacao}`.
 
 # Diagrama da camada de mapeamento para uma tabela do banco de dados
 
