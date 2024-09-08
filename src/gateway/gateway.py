@@ -27,7 +27,7 @@ class Gateway:
 
             sql_associado = text("""
             INSERT INTO associados (cpf, nome, foto, data_adesao, data_nascimento, endereco, email, associado_titular, contrato)
-            VALUES (:cpf, :nome, :foto, CURRENT_DATE, :data_nascimento, :endereco, :email, :tipo, :contrato)
+            VALUES (:cpf, :nome, :foto, CURRENT_DATE, :data_nascimento, :endereco, :email, :associado_titular, :contrato)
             RETURNING cpf
             """)
 
@@ -38,7 +38,7 @@ class Gateway:
                 'data_nascimento': associado.data_nascimento,
                 'endereco': associado.endereco,
                 'email': associado.email,
-                'tipo': None,
+                'associado_titular': associado.associado_titular,
                 'contrato': id_contrato
             })
             cpf_associado = result_associado.scalar()
@@ -143,6 +143,7 @@ class Gateway:
             a.associado_titular, 
             a.contrato,
             p.nome
+            ORDER BY a.nome
             """)
 
             result = session.execute(sql)

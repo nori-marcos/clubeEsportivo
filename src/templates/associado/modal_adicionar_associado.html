@@ -37,6 +37,19 @@
                         </select>
                     </div>
 
+                    <div class="form-group d-none" id="associado_titular_group">
+                        <label for="associado_titular">Nome do Titular da Sociedade:</label>
+                        <select id="associado_titular" class="form-control" name="associado_titular">
+                            <option value="" disabled selected>Selecione um Nome</option>
+                            {% for associado in associados %}
+                                {% if associado.tipo.value == 'TITULAR' %}
+                                    <option value="{{ associado.cpf.cpf }}"
+                                            data-tipo="{{ associado.plano.value }}">{{ associado.nome }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label for="plano">Plano:</label>
                         <select id="plano" class="form-control" name="plano" required>
@@ -45,6 +58,8 @@
                             <option value="bronze">Bronze</option>
                         </select>
                     </div>
+
+                    <input type="hidden" id="plano_hidden" name="plano">
 
                     <div class="form-group">
                         <label for="endereco">Endereço:</label>

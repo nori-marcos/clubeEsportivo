@@ -9,7 +9,7 @@ def extrair_dados_formulario():
     form_data_member = {}
     if 'data_adesao' in request.form:
         form_data_member['data_adesao'] = request.form['data_adesao']
-    campos = ['cpf', 'nome', 'data_nascimento', 'tipo', 'endereco', 'telefone', 'email', 'plano']
+    campos = ['cpf', 'nome', 'data_nascimento', 'tipo', 'endereco', 'telefone1', 'telefone2', 'email', 'plano']
     for campo in campos:
         campo_valor = extrair_campos_formulario(campo)
         if campo_valor is not None:

@@ -29,7 +29,8 @@ def inserir_associado():
             data_nascimento=request.form.get('data_nascimento'),
             endereco=request.form.get('endereco'),
             foto=foto,
-            telefones=telefones
+            telefones=telefones,
+            associado_titular=request.form.get('associado_titular', None),
         )
 
         sucesso, mensagem = Gateway.salvar_associado(associado)

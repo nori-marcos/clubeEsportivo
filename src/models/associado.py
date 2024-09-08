@@ -19,6 +19,7 @@ class Associado(BaseModel):
     data_adesao: date = Field(default_factory=lambda: date.today())
     status: StatusAssociado | None = Field(default=None)
     telefones: List[Telefone] = Field(default_factory=list)
+    associado_titular: str | None = Field(default=None)
 
     @field_validator('data_nascimento', 'data_adesao', mode='before')
     def validar_datas(cls, data_input) -> date:

@@ -54,7 +54,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const telefone2 = errorMessageToInsert.getAttribute('data-telefone2');
             const email = errorMessageToInsert.getAttribute('data-email');
             const plano = errorMessageToInsert.getAttribute('data-plano');
-            preencherFormulario(cpf, nome, dataNascimento, tipo, endereco, telefone1, telefone2, email, plano);
+            const associadoTitular = errorMessageToInsert.getAttribute('data-associado_titular');
+            preencherFormulario(cpf, nome, dataNascimento, tipo, endereco, telefone1, telefone2, email, plano, associadoTitular);
             mostrarErroModal('addMemberModal', 'error-container-add', flashMessages.innerHTML);
             ajustarClassesMensagens();
         }
@@ -142,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $(modal).modal('show');
     }
 
-    function preencherFormulario(cpf, nome, dataNascimento, tipo, endereco, telefone1, telefone2, email, plano) {
+    function preencherFormulario(cpf, nome, dataNascimento, tipo, endereco, telefone1, telefone2, email, plano, associadoTitular) {
         const form = document.getElementById('add-member-form');
         if (form) {
             const cpfInput = form.querySelector('#cpf');
@@ -156,6 +157,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const tipoInput = form.querySelector('#tipo');
             if (tipoInput) tipoInput.value = tipo;
+
+            if (tipo === "dependente") {
+                const associadoTitularGroup = form.querySelector('#associado_titular_group');
+                if (associadoTitularGroup) associadoTitularGroup.classList.remove('d-none');
+            }
+
+            const associadoTitularInput = form.querySelector('#associado_titular');
+            if (associadoTitularInput) {
+                associadoTitularInput.value = associadoTitular;
+            }
 
             const enderecoInput = form.querySelector('#endereco');
             if (enderecoInput) enderecoInput.value = endereco;
@@ -237,6 +248,37 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (input.length > 0) {
                 event.target.value = `${parte1}`;
             }
+        });
+    });
+
+    document.querySelectorAll('#tipo').forEach(function (tipoInput) {
+        tipoInput.addEventListener('change', function (event) {
+            const tipo = event.target.value;
+            const associadoTitularGroup = document.getElementById('associado_titular_group');
+            const associadoTitular = document.getElementById('associado_titular');
+            const associadoPlano = document.getElementById('plano');
+            const planoHidden = document.getElementById('plano_hidden');
+            if (tipo === "dependente") {
+                associadoTitularGroup.classList.remove('d-none');
+            } else {
+                associadoTitularGroup.classList.add('d-none');
+                associadoTitular.value = '';
+                associadoPlano.removeAttribute('disabled');
+                associadoPlano.value = '';
+                planoHidden.value = '';
+            }
+        });
+    });
+
+    document.querySelectorAll('#associado_titular').forEach(function (titularInput) {
+        titularInput.addEventListener('change', function (event) {
+            const selectedOption = event.target.options[event.target.selectedIndex];
+            const tipo = selectedOption.getAttribute('data-tipo');
+            const associadoPlano = document.getElementById('plano');
+            const planoHidden = document.getElementById('plano_hidden');
+            associadoPlano.value = tipo.toLowerCase();
+            associadoPlano.setAttribute('disabled', 'disabled');
+            planoHidden.value = tipo.toLowerCase();
         });
     });
 
