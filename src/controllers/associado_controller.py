@@ -100,7 +100,8 @@ def editar_associado():
             endereco=request.form.get('endereco'),
             foto=foto_final,
             telefones=telefones,
-            data_adesao=request.form.get('data_adesao')
+            data_adesao=request.form.get('data_adesao'),
+            associado_titular=request.form.get('associado_titular', None),
         )
 
         sucesso, mensagem = Gateway.editar_associado(associado)

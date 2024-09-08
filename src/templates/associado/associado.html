@@ -58,6 +58,7 @@
                         <tr>
                             <th>CPF</th>
                             <th>Nome</th>
+                            <th>Tipo</th>
                             <th>Email</th>
                             <th>Telefone</th>
                             <th>Data de Adesão</th>
@@ -71,6 +72,7 @@
                             <tr>
                                 <td>{{ associado.cpf.cpf }}</td>
                                 <td>{{ associado.nome }}</td>
+                                <td>{{ associado.tipo.value }}</td>
                                 <td>{{ associado.email }}</td>
                                 <td>{{ associado.telefones[0].telefone }}</td>
                                 <td>{{ associado.data_adesao }}</td>

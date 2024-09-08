@@ -78,10 +78,10 @@ class Gateway:
                 data_nascimento = associado.data_nascimento if associado.data_nascimento else row['data_nascimento']
                 endereco = associado.endereco if associado.endereco else row['endereco']
                 email = associado.email if associado.email else row['email']
-                associado_titular = row['associado_titular']
                 contrato = row['contrato']
                 foto = base64.b64decode(associado.foto) if associado.foto else None
                 data_adesao = row['data_adesao']
+                associado_titular = associado.associado_titular if associado.associado_titular is not None else None
 
                 sql_update = text("""
                 UPDATE associados
@@ -99,7 +99,6 @@ class Gateway:
                     'contrato': contrato,
                     'foto': foto,
                     'data_adesao': data_adesao
-
                 })
             session.commit()
             return True, "Associado atualizado com sucesso!"
