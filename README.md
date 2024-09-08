@@ -1,69 +1,90 @@
 # Introdução
 
-O projeto pretende gerenciar as atividades de um clube esportivo, atendendo às necessidades de funcionários e
-associados. Foram definidas 12 entidades, sendo as principais: associado, funcionário, evento e instalação. Foi adotado
-o padrão CRUD para operações de criação, leitura, atualização e deleção das entidades, conforme especificação do
-projeto.
+O projeto foi desenvolvido para gerenciar as atividades de um clube esportivo, com o objetivo de melhorar a sua organização. A estrutura do banco de dados foi projetada com 12 entidades, cobrindo os aspectos principais do clube, como associados, funcionários, eventos e instalações.
 
-Associados e funcionários têm como chave primária o CPF. Como identificador das tuplas nas demais tabelas, foi utilizado
-um número serial autoincrementado.
+O sistema adotou o padrão CRUD (Criação, Leitura, Atualização e Deleção) para realizar operações sobre essas entidades, de acordo com as especificações fornecidas no início do projeto.
 
-O sistema será desenvolvido utilizando a linguagem de programação Python `3.12` - framework Flask - e o banco de dados PostgreSQL. A
-interface do usuário é web, baseada em blueprint e views do próprio Flask.
+Em relação ao banco de dados, as relações "associados" e "funcionários" identificam unicamente uma pessoa por meio do CPF. Para as demais tabelas, foi utilizado um número serial autoincrementado como identificador das tuplas. 
+
+O sistema foi desenvolvido utilizando a linguagem de programação Python `3.12` e o framework Flask para a interface gráfica web, baseada em Blueprints e Views do próprio Flask. O banco de dados relacional foi implementado usando PostgreSQL.
 
 ## Como executar o projeto
 
 ### Configurando o Banco de Dados
 
-Antes da primeira vez que o projeto for rodado, é preciso criar o banco de dados localmente. Isso é possível
-com [este script](db/setup_postgres.sh) ou diratamente de um CLI psql:
+Para executar o projeto pela primeira vez, é necessário ter o PostgreSQL instalado na máquina. A configuração do banco de dados pode ser feita localmente utilizando o [script de setup](db/setup_postgres.sh) ou executando os seguintes comandos diretamente no psql:
 
+1. Acesse o shell do PostgreSQL como usuário postgres:
 ```shell
 sudo -iu postgres psql
 ```
-
+2. No terminal do psql, crie a role, o password e o banco de dados com os seguintes comandos:
 ```postgresql
 CREATE ROLE clube_dba with PASSWORD '1234567' CREATEDB LOGIN;
 CREATE DATABASE db_cluve_esportivo with OWNER clube_dba;
 ```
 
-### Configurando o ambiente
+### Configurando o Ambiente Virtual
 
-Crie um ambiente virtual e instale os requerimentos:
+Para executar o projeto, é necessário ter o Python 3.12 instalado na máquina. Além disso, é recomendado criar um ambiente virtual para instalar as dependências do projeto. Para isso, siga os passos abaixo:
+
+1. Crie um ambiente virtual:
 
 ```shell
 python3 -m venv .venv-clube
 ```
+2. Ative o ambiente virtual:
+- No Linux/macOS:
+```shell
+source .venv-clube/bin/activate
+```
+- No Windows:
+```shell
+.venv-clube\Scripts\activate
+```
 
+3. Instale as dependências do projeto:
 ```shell
 pip install -r requirements.txt
 ```
 
-Inicialize o projeto:
-
+4. Inicie o projeto:
 ```shell
 flask --app src run
 ```
 
 # Modelo Entidade Relacionamento (MER)
+O diagrama foi criado utilizando a ferramenta [diagrams.net](https://app.diagrams.net/). O MER que está em formato SVG foi versionado pelo arquivo [imagem svg](diagramas_e_recursos/mer_clube.drawio.svg). Abaixo, segue a vizualização direta do diagrama:
 
 ![MER](diagramas_e_recursos/mer_clube.drawio.svg)
 
-O diagrama foi criado usando a aplicação [app.diagrams](https://app.diagrams.net/) e versionada com a
-seguinte [imagem svg](diagramas_e_recursos/mer_clube.drawio.svg).
-
 # Modelo Relacional
+O diagrama foi criado utilizando a ferramenta de modelagem do PyCharm, que permite ver a estrutura das tabelas e seus relacionamentos. A versão mais recente do diagrama pode ser visualizada abaixo:
 
 ![modelo_relacional](diagramas_e_recursos/modelo_relacional_clube_esportivo.png)
-O diagrama foi criado usando a ferramenta de tabelas do PyCharm.
 
-# Exemplos de Consulta em Algebra relacional
-
-(https://github.com/nori-marcos/clubeEsportivo/blob/main/diagramas_e_recursos/Algebra%20Relacional_02.pdf)
+# Exemplos de Consultas em Algebra relacional
+Como foi solicitado pela especificação do projeto, foram criadas cinco consultas em álgebra relacional que envolvam pelo menos três tabelas. As consultas estão disponíveis no arquivo [Algebra Relacional_02](https://github.com/nori-marcos/clubeEsportivo/blob/main/diagramas_e_recursos/Algebra%20Relacional_02.pdf)
 
 # Avaliação das formas normais
+O projeto foi desenvolvido de acordo com a Terceira Forma Normal (3FN), o que implica que também atende aos requisitos da Primeira e Segunda Formas Normais (1FN e 2FN). Abaixo segue a avaliação das formas normais de cinco tabelas do banco de dados:
 
-lorem ipsum
+1. Tabela `associados`:
+- 1FN: A tabela possui apenas valores atômicos, sem atributos multivalorados. A entidade `associados` do modelo MER tem o atributo multivalorado `telefones`, mas foi normalizado na tabela `associados_telefones`.
+- 2FN: A tabela possui chave candidata `{cpf}` e os atributos `nome`, `foto`, `data_adesao`, `data_nascimento`, `endereco`, `email`, `associado_titular` e `contrato` são complementos da chave e totalmente dependentes da chave candidata.
+- 3FN: Os atributos não chave `nome`, `foto`, `data_adesao`, `data_nascimento`, `endereco`, `email`, `associado_titular` e `contrato` são dependentes não-transitivos da chave candidata `{cpf}`.
+
+2. Tabela `funcionarios`:
+- 1FN: Muito similar à tabela `associados`, a tabela `funcionarios` possui apenas valores atômicos. Seguindo a mesma lógica, o atributo multivalorado `telefones` foi normalizado na tabela `funcionarios_telefones`.
+- 2FN: A tabela possui chave candidata `{cpf}` e os atributos `nome`, `data_nascimento`, `data_admissao`, `email`, `salario`, `endereco`, `cargo` e `departamento` são complementos da chave e totalmente dependentes da chave candidata.
+- 3FN: Os atributos não chave `nome`, `data_nascimento`, `data_admissao`, `email`, `salario`, `endereco`, `cargo` e `departamento` são dependentes não-transitivos da chave candidata `{cpf}`.
+
+3. Tabela `cargos`:
+- 1FN: A tabela possui apenas valores atômicos, sem atributos multivalorados.
+- 2FN: A tabela possui chave candidata `{id_cargo}` e os atributos `nome`, `descricao` e `salario_base` são complementos da chave e totalmente dependentes da chave candidata. Ou seja, para cada `{id_cargo}` define funcionalmente um único valor para `nome`, `descricao` e `salario_base`.
+- 3FN: Os atributos não chave `nome`, `descricao` e `salario_base` são dependentes não-transitivos da chave candidata `{id_cargo}`. Ou seja, um atributo não chave não pode definir funcionalmente outro atributo não chave.
+
+
 
 # Diagrama da camada de mapeamento para uma tabela do banco de dados
 
