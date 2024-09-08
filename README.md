@@ -59,7 +59,7 @@ O diagrama foi criado usando a ferramenta de tabelas do PyCharm.
 
 # Exemplos de Consulta em Algebra relacional
 
-lorem ipsum
+(https://github.com/nori-marcos/clubeEsportivo/blob/main/diagramas_e_recursos/Algebra%20Relacional_02.pdf)
 
 # Avaliação das formas normais
 
