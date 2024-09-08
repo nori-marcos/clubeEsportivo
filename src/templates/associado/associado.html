@@ -57,8 +57,8 @@
                         <thead class="bg-light">
                         <tr>
                             <th>CPF</th>
-                            <th>Nome</th>
                             <th>Tipo</th>
+                            <th>Nome</th>
                             <th>Email</th>
                             <th>Telefone</th>
                             <th>Data de Adesão</th>
@@ -71,8 +71,14 @@
                         {% for associado in associados %}
                             <tr>
                                 <td>{{ associado.cpf.cpf }}</td>
+                                <td>
+                                    {% if associado.tipo.value == 'TITULAR' %}
+                                        <span class="badge badge-primary">titular</span>
+                                    {% elif associado.tipo.value == 'DEPENDENTE' %}
+                                        <span class="badge badge-info">dependente</span>
+                                    {% endif %}
+                                </td>
                                 <td>{{ associado.nome }}</td>
-                                <td>{{ associado.tipo.value }}</td>
                                 <td>{{ associado.email }}</td>
                                 <td>{{ associado.telefones[0].telefone }}</td>
                                 <td>{{ associado.data_adesao }}</td>
