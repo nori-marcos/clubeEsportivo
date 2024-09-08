@@ -1,0 +1,79 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb} % Símbolos matemáticos extras
+
+
+\title{Algebra Relacional Banco de Dados}
+\author{Grupo: Marcos, Luis Henrique, Delma, Alberto}
+\date{September 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Algebra Relacional para SQL}
+\vspace{1cm}
+
+\subsection {Relação 1}
+{\Large\vspace{1cm}
+\texttt{
+$\pi_{\text{nome, status, tipo}}$ \\
+\left( \left( \sigma_{\text{MatriculaAssoc = Associado\_MatriculaAssoc}} \\
+\left( \text{ASSOCIADO} \times \text{CONTRATO} \right) \right) \cap $ 
+$\left( \sigma_{\text{idContrato = Contrato\_idContrato}} \left( \text{CONTRATO} \times \text{PAGAMENTO} \right) \right)
+}
+}
+\vspace{2cm}
+\subsection {Relação 2}
+{\Large\vspace{1cm}
+\texttt{
+$\pi_{\text{nome, matricula, nome\_cargo, nome\_Depto}}$ \\
+\left( \left( \sigma_{\text{IdCargo = Cargo\_idcargo}} \\
+\left( \text{FUNCIONARIO} \times \text{CARGO} \right) \right) \cap $ \\ 
+$\left( \sigma_{\text{id\_depto = Departamento\_idDepto}} \left( \text{FUNCIONARIO} \times \text{DEPARTAMENTO} \right) \right)
+}
+}
+\vspace{2cm}
+
+\subsection {Relação 3}
+{\Large\vspace{1cm}
+\texttt{
+$\pi_{\text{nome, matricula\_associado, nome\_esporte, nome\_equipe}}$ \\
+\left( \left( \sigma_{\text{IdEsporte = idCargo\_idcargo}} \\
+\left( \text{ESPORTE} \times \text{EQUIPE} \right) \right) \cap $ \\ 
+$\left( \sigma_{\text{id\_equipe = Equipe\_idEquipe}} \left( \text{EQUIPE TEM ASSOCIADO} \times \text{ESPORTE} \right) \right)
+}
+}
+\vspace{2cm}
+
+
+\subsection {Relação 4}
+{\Large\vspace{1cm}
+\texttt{
+$\pi_{\text{nome, matricula\_funcionario, cargo, salario}}$ \\
+$\left( \sigma_{\text{salario} \leq \text { 3.000,00}} $
+\left( \left( \sigma_{\text{IdCargo = cargo\_idcargo}} \\
+\left( \text{FUNCIONARIO} \times \text{CARGO} \right) \cup $ \\ 
+$\left( \sigma_{\text{idDepartamento = Departamento\_idDepartamento}} \left( \text{DEPARTAMENTO} \times \text{FUNCIONARIO} \right) \right) \right)
+}
+}
+\vspace{2cm}
+
+
+\subsection {Relação 5}
+
+{\Large\vspace{1cm}
+\texttt{
+$\pi_{\text{nome, cpf, contrato, data, vencimento}}$ \\
+$\left( \sigma_{\text{data\_vencimento } \leq \text { data\_pagamento} \text { OR data\_pagamento = null}} $ \\
+\left( \sigma_{\text{MatriculaAssoc = Associado\_MatriculaAsso}} \\
+\left( \text{ASSOCIADO} \times \text{CONTRATO} \right) \cup $ \\ 
+$\left( \sigma_{\text{idContrato = Contrato\_idContrato}} \left( \text{CONTRATO} \times \text{PAGAMENTO} \right) \right) \right)
+}
+}
+
+\vspace{2cm}
+
+
+
+\end{document}
