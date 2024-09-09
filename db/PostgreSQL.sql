@@ -280,60 +280,73 @@ CREATE PROCEDURE editar_contrato_associado_telefone(
 AS
 $$
 DECLARE
-    telefone varchar(13);
+    telefone                  varchar(13);
+    v_associado_titular_antes varchar(11);
 BEGIN
-    -- Primeiro, atualiza o contrato
-    UPDATE contratos
-    SET plano = p_plano
-    WHERE id_contrato = (SELECT contrato FROM associados WHERE cpf = p_cpf);
+    -- Verifica se o associado era dependente e está sendo alterado para titular
+    SELECT associado_titular
+    INTO v_associado_titular_antes
+    FROM associados
+    WHERE cpf = p_cpf;
 
-    -- Depois, atualiza os dados do associado
-    IF p_nome IS NOT NULL THEN
-        UPDATE associados
-        SET nome = p_nome
-        WHERE cpf = p_cpf
-          AND nome IS DISTINCT FROM p_nome;
+    -- Se o associado era dependente e está sendo alterado para titular
+    IF v_associado_titular_antes IS NOT NULL AND p_associado_titular IS NULL THEN
+        DELETE FROM associados
+        WHERE cpf = p_cpf;
+
+        CALL salvar_contrato_associado_telefone(
+                p_cpf, p_nome, p_email, p_plano, p_data_nascimento,
+                p_endereco, p_foto, p_telefones, p_associado_titular);
+
+    ELSE
+        -- Primeiro, atualiza o contrato
+        UPDATE contratos
+        SET plano = p_plano
+        WHERE id_contrato = (SELECT contrato FROM associados WHERE cpf = p_cpf);
+
+        -- Depois, atualiza os dados do associado
+        IF p_nome IS NOT NULL THEN
+            UPDATE associados
+            SET nome = p_nome
+            WHERE cpf = p_cpf
+              AND nome IS DISTINCT FROM p_nome;
+        END IF;
+
+        IF p_email IS NOT NULL THEN
+            UPDATE associados
+            SET email = p_email
+            WHERE cpf = p_cpf
+              AND email IS DISTINCT FROM p_email;
+        END IF;
+
+        IF p_data_nascimento IS NOT NULL THEN
+            UPDATE associados
+            SET data_nascimento = p_data_nascimento
+            WHERE cpf = p_cpf
+              AND data_nascimento IS DISTINCT FROM p_data_nascimento;
+        END IF;
+
+        IF p_endereco IS NOT NULL THEN
+            UPDATE associados
+            SET endereco = p_endereco
+            WHERE cpf = p_cpf
+              AND endereco IS DISTINCT FROM p_endereco;
+        END IF;
+
+        IF p_foto IS NOT NULL THEN
+            UPDATE associados
+            SET foto = p_foto
+            WHERE cpf = p_cpf
+              AND foto IS DISTINCT FROM p_foto;
+        END IF;
+
+        -- Por fim, atualiza os telefones em associados_telefones
+        DELETE FROM associados_telefones WHERE associado = p_cpf;
+        FOREACH telefone IN ARRAY p_telefones
+            LOOP
+                INSERT INTO associados_telefones (associado, telefone) VALUES (p_cpf, telefone);
+            END LOOP;
     END IF;
-
-    IF p_email IS NOT NULL THEN
-        UPDATE associados
-        SET email = p_email
-        WHERE cpf = p_cpf
-          AND email IS DISTINCT FROM p_email;
-    END IF;
-
-    IF p_data_nascimento IS NOT NULL THEN
-        UPDATE associados
-        SET data_nascimento = p_data_nascimento
-        WHERE cpf = p_cpf
-          AND data_nascimento IS DISTINCT FROM p_data_nascimento;
-    END IF;
-
-    IF p_endereco IS NOT NULL THEN
-        UPDATE associados
-        SET endereco = p_endereco
-        WHERE cpf = p_cpf
-          AND endereco IS DISTINCT FROM p_endereco;
-    END IF;
-
-    IF p_foto IS NOT NULL THEN
-        UPDATE associados
-        SET foto = p_foto
-        WHERE cpf = p_cpf
-          AND foto IS DISTINCT FROM p_foto;
-    END IF;
-
-    UPDATE associados
-    SET associado_titular = p_associado_titular
-    WHERE cpf = p_cpf
-      AND associado_titular IS DISTINCT FROM p_associado_titular;
-
-    -- Por fim, atualiza os telefones em associados_telefones
-    DELETE FROM associados_telefones WHERE associado = p_cpf;
-    FOREACH telefone IN ARRAY p_telefones
-        LOOP
-            INSERT INTO associados_telefones (associado, telefone) VALUES (p_cpf, telefone);
-        END LOOP;
 END;
 $$;
 
