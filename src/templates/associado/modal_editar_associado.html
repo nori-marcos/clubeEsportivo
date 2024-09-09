@@ -44,24 +44,28 @@
                     <div class="form-group">
                         <label for="edit-tipo-{{ associado.cpf.cpf }}">Tipo:</label>
                         <select id="edit-tipo-{{ associado.cpf.cpf }}" class="form-control" name="tipo" required>
-                            <option value="titular" {% if associado.tipo == 'titular' %}selected{% endif %}>Titular
+                            <option value="titular" {% if associado.tipo == 'TITULAR' %}selected{% endif %}>Titular
                             </option>
-                            <option value="dependente" {% if associado.tipo == 'dependente' %}selected{% endif %}>
+                            <option value="dependente" {% if associado.tipo == 'DEPENDENTE' %}selected{% endif %}>
                                 Dependente
                             </option>
                         </select>
                     </div>
 
-                    <div class="form-group d-none" id="edit-associado_titular_group-{{ associado.cpf.cpf }}">
+                    <div class="form-group {% if associado.tipo == 'TITULAR' %}d-none{% endif %}"
+                         id="edit-associado_titular_group-{{ associado.cpf.cpf }}">
                         <label for="edit-associado_titular-{{ associado.cpf.cpf }}">Nome do Titular da
                             Sociedade:</label>
                         <select id="edit-associado_titular-{{ associado.cpf.cpf }}" class="form-control"
                                 name="associado_titular">
                             <option value="" disabled selected>Selecione um Nome</option>
-                            {% for associado in associados %}
-                                {% if associado.tipo.value == 'TITULAR' %}
-                                    <option value="{{ associado.cpf.cpf }}"
-                                            data-tipo="{{ associado.plano.value }}">{{ associado.nome }}</option>
+                            {% for associado_titular_disponivel in associados %}
+                                {% if associado_titular_disponivel.tipo.value == 'TITULAR' %}
+                                    {% if associado.cpf.cpf !=  associado_titular_disponivel.cpf.cpf %}
+                                        <option {% if associado_titular_disponivel.cpf.cpf == associado.associado_titular %}selected{% endif %}
+                                                value="{{ associado_titular_disponivel.cpf.cpf }}"
+                                                data-tipo="{{ associado_titular_disponivel.plano.value }}">{{ associado_titular_disponivel.nome }}</option>
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </select>
