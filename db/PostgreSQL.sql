@@ -402,16 +402,3 @@ BEGIN
     RETURN v_status;
 END;
 $$;
-
--- REMOVER SCRIPTS DE PROCEDURES
-CREATE PROCEDURE associados_com_pagamentos_irregulares()
-    LANGUAGE sql AS
-$$
-SELECT titulares.cpf, titulares.nome, contratos.contrato, contratos.data_vencimento
-FROM (SELECT * FROM associados WHERE associado_titular IS NULL) AS titulares
-         inner join (SELECT contrato, data_vencimento
-                     FROM pagamentos
-                     WHERE (data_vencimento < data_pagamento)
-                        or (data_pagamento IS NULL)) AS contratos
-                    ON (contratos.contrato = titulares.contrato);
-$$;
