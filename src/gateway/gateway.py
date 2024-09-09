@@ -18,39 +18,22 @@ class Gateway:
     @staticmethod
     def salvar_associado(associado: Associado):
         try:
-            sql_contrato = text("""
-            INSERT INTO contratos (data_inicio, data_termino, plano)
-            VALUES (CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', :plano)
-            RETURNING id_contrato
-            """)
-            result_contrato = session.execute(sql_contrato, {'plano': associado.plano})
-            id_contrato = result_contrato.scalar()
-
-            sql_associado = text("""
-            INSERT INTO associados (cpf, nome, foto, data_adesao, data_nascimento, endereco, email, associado_titular, contrato)
-            VALUES (:cpf, :nome, :foto, CURRENT_DATE, :data_nascimento, :endereco, :email, :associado_titular, :contrato)
-            RETURNING cpf
+            sql_contrato_associado_telefones = text("""
+            CALL salvar_contrato_associado_telefone(:cpf, :nome, :email, :plano, 
+            :data_nascimento, :endereco, :foto, :telefones, :associado_titular)
             """)
 
-            result_associado = session.execute(sql_associado, {
+            session.execute(sql_contrato_associado_telefones, {
                 'cpf': associado.cpf.cpf,
                 'nome': associado.nome,
-                'foto': base64.b64decode(associado.foto) if associado.foto else None,
+                'email': associado.email,
+                'plano': associado.plano,
                 'data_nascimento': associado.data_nascimento,
                 'endereco': associado.endereco,
-                'email': associado.email,
-                'associado_titular': associado.associado_titular,
-                'contrato': id_contrato
+                'foto': base64.b64decode(associado.foto) if associado.foto else None,
+                'telefones': [telefone.telefone for telefone in associado.telefones],
+                'associado_titular': associado.associado_titular if associado.associado_titular else None
             })
-            cpf_associado = result_associado.scalar()
-
-            sql_telefones = text("""
-            INSERT INTO associados_telefones (associado, telefone)
-            VALUES (:associado, :telefone)
-            """)
-            for telefone in associado.telefones:
-                session.execute(sql_telefones, {'associado': cpf_associado, 'telefone': telefone.telefone})
-
             session.commit()
             return True, "Associado inserido com sucesso!"
         except SQLAlchemyError as e:

@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS associados
     data_nascimento   date    NOT NULL,
     endereco          varchar NOT NULL,
     email             varchar NOT NULL,
-    associado_titular varchar,
+    associado_titular varchar(11),
     contrato          integer NOT NULL
 );
 
@@ -223,7 +223,7 @@ ALTER TABLE funcionarios_telefones
 ALTER TABLE departamentos
     ADD FOREIGN KEY (localizacao) REFERENCES instalacoes (id_instalacao) MATCH FULL;
 
--------------------------------- PROCEDURE --------------------------------
+-------------------------------- PROCEDURES --------------------------------
 
 
 CREATE PROCEDURE associados_com_pagamentos_irregulares()
@@ -236,4 +236,42 @@ FROM (SELECT * FROM associados WHERE associado_titular IS NULL) AS titulares
                      WHERE (data_vencimento < data_pagamento)
                         or (data_pagamento IS NULL)) AS contratos
                     ON (contratos.contrato = titulares.contrato);
+$$;
+
+-- Procedimento para salvar um contrato associado com telefones
+CREATE PROCEDURE salvar_contrato_associado_telefone(
+    IN p_cpf varchar(11),
+    IN p_nome varchar,
+    IN p_email varchar,
+    IN p_plano varchar,
+    IN p_data_nascimento date,
+    IN p_endereco varchar,
+    IN p_foto bytea,
+    IN p_telefones text[],
+    IN p_associado_titular varchar(11))
+    LANGUAGE plpgsql
+AS
 $$
+DECLARE
+    v_contrato integer;
+    telefone  varchar(13);
+BEGIN
+    -- Primeiro, insere o contrato
+    INSERT INTO contratos (data_inicio, data_termino, plano)
+    VALUES (CURRENT_DATE, CURRENT_DATE + INTERVAL '1 year', p_plano)
+    RETURNING id_contrato INTO v_contrato;
+
+    -- Depois, insere o associado e salva o número do contrato
+    INSERT INTO associados (cpf, nome, foto, data_adesao, data_nascimento, endereco, email, associado_titular, contrato)
+    VALUES (p_cpf, p_nome, p_foto, CURRENT_DATE, p_data_nascimento, p_endereco, p_email, p_associado_titular,
+            v_contrato);
+
+    -- Por fim, insere os telefones em associados_telefones
+    FOREACH telefone IN ARRAY p_telefones
+        LOOP
+            INSERT INTO associados_telefones (associado, telefone) VALUES (p_cpf, telefone);
+        END LOOP;
+END;
+$$;
+
+
