@@ -289,6 +289,10 @@ BEGIN
     FROM associados
     WHERE cpf = p_cpf;
 
+    IF v_associado_titular_antes IS NULL AND p_associado_titular IS NOT NULL THEN
+        RAISE EXCEPTION 'Um titular não pode ser transformado em dependente. O associado deve ser excluído e cadastrado novamente como dependente.';
+    END IF;
+
     -- Se o associado era dependente e está sendo alterado para titular
     IF v_associado_titular_antes IS NOT NULL AND p_associado_titular IS NULL THEN
         DELETE FROM associados
