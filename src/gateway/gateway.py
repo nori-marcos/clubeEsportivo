@@ -9,7 +9,7 @@ from src.exceptions.exceptions import CustomException
 from src.gateway import session_singleton
 from src.gateway.config.tables_config import check_and_create_database
 from src.models.associado import Associado
-from src.models.types import Titularidade, TipoDePlano, CPF, Telefone
+from src.models.types import Titularidade, TipoDePlano, CPF, Telefone, StatusAssociado
 
 session = session_singleton
 check_and_create_database(session)
@@ -90,11 +90,14 @@ class Gateway:
             a.associado_titular,
             a.contrato,
             STRING_AGG(t.telefone, ', ') AS telefones,
-            p.nome AS nome_plano
+            p.nome AS nome_plano,
+            pg.data_vencimento AS pg_data_vencimento,
+            pg.data_pagamento AS pg_data_pagamento
             FROM associados a
             LEFT JOIN associados_telefones t ON a.cpf = t.associado
             LEFT JOIN contratos c ON a.contrato = c.id_contrato
             LEFT JOIN planos p ON c.plano = p.nome
+            LEFT JOIN pagamentos pg ON c.id_contrato = pg.contrato
             GROUP BY 
             a.cpf, 
             a.nome, 
@@ -105,7 +108,9 @@ class Gateway:
             a.email,
             a.associado_titular, 
             a.contrato,
-            p.nome
+            p.nome,
+            pg.data_vencimento,
+            pg.data_pagamento
             ORDER BY a.nome
             """)
 
@@ -125,6 +130,17 @@ class Gateway:
                 telefones: List[Telefone] = [Telefone(dono=cpf, telefone=numero.strip()) for numero in
                                              row['telefones'].split(', ')] if row['telefones'] else []
                 associado_titular = row['associado_titular']
+                pg_data_vencimento = row['pg_data_vencimento']
+                pg_data_pagamento = row['pg_data_pagamento']
+
+                status: StatusAssociado = StatusAssociado.SUSPENSO
+
+                if pg_data_vencimento:
+                    if not pg_data_pagamento and pg_data_vencimento > date.today():
+                        status = StatusAssociado.SUSPENSO
+                    if pg_data_pagamento and pg_data_pagamento <= pg_data_vencimento:
+                        status = StatusAssociado.ATIVO
+
                 associado = Associado(
                     cpf=cpf,
                     nome=nome,
@@ -136,10 +152,11 @@ class Gateway:
                     foto=foto_base64,
                     data_adesao=data_adesao,
                     telefones=telefones,
-                    associado_titular=associado_titular
-                )
+                    associado_titular=associado_titular,
+                    status=status)
                 associados.append(associado)
             return associados
+
         except SQLAlchemyError as e:
             session.rollback()
             erro_original = getattr(e, 'orig', None)
@@ -163,5 +180,57 @@ class Gateway:
             erro_original = getattr(e, 'orig', None)
             if erro_original:
                 raise CustomException(f"Erro ao remover o associado: {erro_original}")
+            else:
+                raise CustomException(f"Erro no banco de dados: {e}")
+
+    @staticmethod
+    def listar_pagamentos():
+        try:
+            sql = text("""
+            SELECT
+            p.id_pagamento,
+            a.cpf AS cpf_associado,
+            a.nome AS nome_associado,
+            p.data_vencimento,
+            p.data_pagamento,
+            p.valor,
+            p.tipo,
+            p.metodo,
+            p.descricao
+            FROM pagamentos p
+            LEFT JOIN associados a ON p.cpf_associado = a.cpf
+            ORDER BY p.data_vencimento
+            """)
+
+            result = session.execute(sql)
+            pagamentos = []
+            for row in result.mappings():
+                id_pagamento = row['id_pagamento']
+                cpf_associado = CPF(cpf=row['cpf_associado'])
+                nome_associado = row['nome_associado']
+                data_vencimento = row['data_vencimento']
+                data_pagamento = row['data_pagamento']
+                valor = row['valor']
+                tipo = row['tipo']
+                metodo = row['metodo']
+                descricao = row['descricao']
+                pagamento = {
+                    'id_pagamento': id_pagamento,
+                    'cpf_associado': cpf_associado,
+                    'nome_associado': nome_associado,
+                    'data_vencimento': data_vencimento,
+                    'data_pagamento': data_pagamento,
+                    'valor': valor,
+                    'tipo': tipo,
+                    'metodo': metodo,
+                    'descricao': descricao
+                }
+                pagamentos.append(pagamento)
+            return pagamentos
+        except SQLAlchemyError as e:
+            session.rollback()
+            erro_original = getattr(e, 'orig', None)
+            if erro_original:
+                raise CustomException(f"Erro ao listar os pagamentos: {erro_original}")
             else:
                 raise CustomException(f"Erro no banco de dados: {e}")

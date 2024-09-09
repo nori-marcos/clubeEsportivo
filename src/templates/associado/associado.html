@@ -80,7 +80,7 @@
                                 </td>
                                 <td>{{ associado.nome }}</td>
                                 <td>{{ associado.email }}</td>
-                                <td>{{ associado.telefones[0].telefone if associado.telefones}}</td>
+                                <td>{{ associado.telefones[0].telefone if associado.telefones }}</td>
                                 <td>{{ associado.data_adesao }}</td>
                                 <td>
                                     {% if associado.plano.value == 'OURO' %}
@@ -92,7 +92,15 @@
                                               style="background-color: #cd7f32; color: white;">bronze</span>
                                     {% endif %}
                                 </td>
-                                <td>{{ associado.status }}</td>
+                                {% if associado.status == 'ATIVO' %}
+                                    <td>
+                                        <span class="badge badge-success">ativo</span>
+                                    </td>
+                                {% elif associado.status == 'SUSPENSO' %}
+                                    <td>
+                                        <span class="badge badge-danger">suspenso</span>
+                                    </td>
+                                {% endif %}
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                             data-target="#viewMemberModal{{ associado.cpf.cpf }}">
