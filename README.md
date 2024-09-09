@@ -94,17 +94,55 @@ O projeto foi desenvolvido de acordo com a Terceira Forma Normal (3FN), o que im
 - 2FN: A tabela possui chave candidata `{id_instalacao}` e os atributos `nome`, `em_funcionamento` e `capacidade` são complementos da chave e totalmente funcionalmente dependentes daquela chave.
 - 3FN: Os atributos não chave `nome`, `em_funcionamento` e `capacidade` são dependentes não-transitivos da chave candidata `{id_instalacao}`.
 
-# Diagrama da camada de mapeamento para uma tabela do banco de dados
+# Diagramas da camada de mapeamento para uma tabela do banco de dados
+O Projeto com seus vários módulos possui um padrão de arquitetura baseada em Model View Controller (MVC). 
+- A `View` é a camada de apresentação, que exibe os dados ao usuário e envia as requisições para a camada de controle. 
+- A `Controller` é a camada de controle, que recebe as requisições do usuário, cria instâncias de `Model` e chama os métodos da interface com o banco de dados.
+- `Gateway` funciona como Data Access Object (DAO), abstraindo o acesso ao banco de dados.
+- `Banco de Dados` é a camada de persistência, que armazena os dados.
 
+A comunicação entre as camadas é feita por meio de mensagens, que são enviadas e recebidas por objetos. Abaixo, segue o diagrama da camada de mapeamento para a tabela `associados` em casos de sucesso:
+
+## Fluxo de escrita de dados
 ```mermaid
 sequenceDiagram
-    Note left of View: CRUD
-    View ->> Model: input do usuário
-    Model ->> Controller: entidade instanciada
-    Controller ->> Gateway: objeto manipulado
-    Gateway ->> Banco de Dados: SQL
+    View ->> Controller: input usuário
+    Controller ->> Gateway: instância Model
+    Gateway ->> Banco de Dados: comando SQL
+    Banco de Dados -->> Gateway: sucesso
+    Gateway -->> Controller: sucesso
+    Controller -->> View: renderizar sucesso
 ```
 
-O Projeto com seus vários módulos possui um padrão de arquitetura baseada em Model View Controller (MVC). A camada
-`Gateway`
-funciona como Data Access Object (DAO), abstraindo o acesso ao banco de dados.
+## Fluxo de atualização de dados
+```mermaid
+sequenceDiagram
+    View ->> Controller: input usuário
+    Controller ->> Gateway: instância Model
+    Gateway ->> Banco de Dados: comando SQL
+    Banco de Dados -->> Gateway: sucesso
+    Gateway -->> Controller: sucesso
+    Controller -->> View: renderizar sucesso
+```
+
+## Fluxo de leitura de dados
+```mermaid
+sequenceDiagram
+    View ->> Controller: requisição
+    Controller ->> Gateway: buscar dados
+    Gateway ->> Banco de Dados: comando SQL
+    Banco de Dados -->> Gateway: resultado
+    Gateway -->> Controller: instância Model
+    Controller -->> View: renderizar instância
+```
+
+## Fluxo de deleção de dados
+```mermaid
+sequenceDiagram
+    View ->> Controller: input (ID)
+    Controller ->> Gateway: deletar com ID
+    Gateway ->> Banco de Dados: comando SQL
+    Banco de Dados -->> Gateway: sucesso
+    Gateway -->> Controller: sucesso
+    Controller -->> View: renderizar sucesso
+```
