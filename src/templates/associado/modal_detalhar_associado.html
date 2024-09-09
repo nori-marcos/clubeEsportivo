@@ -47,6 +47,13 @@
                         </p>
                         <p class="card-text"><strong>Data de Nascimento:</strong> {{ associado.data_nascimento }}</p>
                         <p class="card-text"><strong>Tipo:</strong> {{ associado.tipo.value }}</p>
+                        {% if associado.tipo == "DEPENDENTE" %}
+                            {% for associado_titular in associados %}
+                                {% if associado_titular.cpf.cpf == associado.associado_titular %}
+                                    <p class="card-text"><strong>Associado Titular:</strong> {{ associado_titular.nome }}</p>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                         <p class="card-text"><strong>Endereço:</strong> {{ associado.endereco }}</p>
                         <p class="card-text"><strong>Data de Adesão:</strong> {{ associado.data_adesao }}</p>
                         <p class="card-text"><strong>Status:</strong> {{ associado.status.value }}</p>
