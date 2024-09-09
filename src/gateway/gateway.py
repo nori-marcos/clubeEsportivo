@@ -7,11 +7,12 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from src.exceptions.exceptions import CustomException
 from src.gateway import session_singleton
+from src.gateway.config.tables_config import check_and_create_database
 from src.models.associado import Associado
 from src.models.types import Titularidade, TipoDePlano, CPF, Telefone
 
 session = session_singleton
-
+check_and_create_database(session)
 
 class Gateway:
     @staticmethod
