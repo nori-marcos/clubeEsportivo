@@ -90,9 +90,7 @@ class Gateway:
             a.associado_titular,
             a.contrato,
             STRING_AGG(t.telefone, ', ') AS telefones,
-            p.nome AS nome_plano,
-            pg.data_vencimento AS pg_data_vencimento,
-            pg.data_pagamento AS pg_data_pagamento
+            p.nome AS nome_plano
             FROM associados a
             LEFT JOIN associados_telefones t ON a.cpf = t.associado
             LEFT JOIN contratos c ON a.contrato = c.id_contrato
@@ -108,9 +106,7 @@ class Gateway:
             a.email,
             a.associado_titular, 
             a.contrato,
-            p.nome,
-            pg.data_vencimento,
-            pg.data_pagamento
+            p.nome
             ORDER BY a.nome
             """)
 
@@ -130,16 +126,14 @@ class Gateway:
                 telefones: List[Telefone] = [Telefone(dono=cpf, telefone=numero.strip()) for numero in
                                              row['telefones'].split(', ')] if row['telefones'] else []
                 associado_titular = row['associado_titular']
-                pg_data_vencimento = row['pg_data_vencimento']
-                pg_data_pagamento = row['pg_data_pagamento']
 
-                status: StatusAssociado = StatusAssociado.SUSPENSO
+                sql_pagamento = text("""
+                SELECT verificar_pagamento_status(:cpf)
+                """)
 
-                if pg_data_vencimento:
-                    if not pg_data_pagamento and pg_data_vencimento > date.today():
-                        status = StatusAssociado.SUSPENSO
-                    if pg_data_pagamento and pg_data_pagamento <= pg_data_vencimento:
-                        status = StatusAssociado.ATIVO
+                pagamento_em_dia = session.execute(sql_pagamento, {'cpf': cpf.cpf}).fetchone()
+
+                status = StatusAssociado.ATIVO if pagamento_em_dia[0] else StatusAssociado.SUSPENSO
 
                 associado = Associado(
                     cpf=cpf,
