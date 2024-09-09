@@ -28,6 +28,15 @@
                                 🥉 Você é nosso associado bronze!
                             {% endif %}
                         </div>
+                        {% if associado.status == 'SUSPENSO' %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Que pena, parece que você tem algum pagamento pendente. Entre em contato conosco para
+                                regularizar.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endif %}
                         <h5 class="card-title">{{ associado.nome }}</h5>
                         <p class="card-text"><strong>CPF:</strong> {{ associado.cpf.cpf }}</p>
                         <p class="card-text"><strong>Email:</strong> {{ associado.email }}</p>
@@ -40,7 +49,7 @@
                         <p class="card-text"><strong>Tipo:</strong> {{ associado.tipo.value }}</p>
                         <p class="card-text"><strong>Endereço:</strong> {{ associado.endereco }}</p>
                         <p class="card-text"><strong>Data de Adesão:</strong> {{ associado.data_adesao }}</p>
-                        <p class="card-text"><strong>Status:</strong> {{ associado.status }}</p>
+                        <p class="card-text"><strong>Status:</strong> {{ associado.status.value }}</p>
                     </div>
                 </div>
             </div>

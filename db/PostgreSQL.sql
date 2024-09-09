@@ -253,7 +253,11 @@ BEGIN
     VALUES (p_cpf, p_nome, p_foto, CURRENT_DATE, p_data_nascimento, p_endereco, p_email, p_associado_titular,
             v_contrato);
 
-    -- Por fim, insere os telefones em associados_telefones
+    -- Adiciona o primeiro pagamento para daqui a 1 mês
+    INSERT INTO pagamentos (data_vencimento, contrato, valor)
+    VALUES (CURRENT_DATE + INTERVAL '1 month', v_contrato, (SELECT valor FROM planos WHERE nome = p_plano));
+
+    -- Depois, insere os telefones em associados_telefones
     FOREACH telefone IN ARRAY p_telefones
         LOOP
             INSERT INTO associados_telefones (associado, telefone) VALUES (p_cpf, telefone);
@@ -361,11 +365,14 @@ BEGIN
 
     -- Lógica para verificar o status de pagamento
     SELECT CASE
-               -- Caso 1: pagamento não realizado e ainda dentro do prazo de vencimento
-               WHEN data_pagamento IS NULL AND data_vencimento > CURRENT_DATE THEN FALSE
+               -- pagamento não realizado e ainda dentro do prazo de vencimento
+               WHEN data_pagamento IS NULL AND data_vencimento > CURRENT_DATE THEN TRUE
 
-               -- Caso 2: pagamento realizado e dentro do prazo de vencimento, status ativo
+               -- pagamento realizado e dentro do prazo de vencimento, status ativo
                WHEN data_pagamento IS NOT NULL AND data_pagamento <= data_vencimento THEN TRUE
+
+               -- pagamento não realizado e fora do prazo de vencimento
+               WHEN data_pagamento IS NULL AND data_vencimento < CURRENT_DATE THEN FALSE
 
                -- Caso 3: qualquer outro cenário, status suspenso
                ELSE FALSE
