@@ -89,18 +89,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    const selectPayment = document.getElementById("table-filter-payment");
-    const paymentTable = document.getElementById("paymentTable");
-    const rowsPayment = paymentTable.querySelectorAll("tbody tr");
-
-    selectPayment.addEventListener("keyup", (event) => {
-        const value = event.target.value.toLowerCase();
-        rowsPayment.forEach((row) => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(value) ? "table-row" : "none";
-        });
-    });
-
     function ajustarClassesMensagens() {
         document.querySelectorAll('.alert').forEach((alert) => {
             const parts = alert.className.split('-');
@@ -253,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('#tipo').forEach(function (tipoInput) {
         tipoInput.addEventListener('change', function (event) {
-            const tipo = event.target.value;
+            const tipo = event.target.value.toLowerCase();
             const associadoTitularGroup = document.getElementById('associado_titular_group');
             const associadoTitular = document.getElementById('associado_titular');
             const associadoPlano = document.getElementById('plano');
@@ -317,30 +305,4 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    const cpfSelect = document.getElementById('cpf_pagamento');
-    const nomeSelect = document.getElementById('nome_pagamento');
-
-    nomeSelect.addEventListener('change', function () {
-        const selectedOption = nomeSelect.options[nomeSelect.selectedIndex];
-        const cpf = selectedOption.getAttribute('data-cpf');
-
-        for (let i = 0; i < cpfSelect.options.length; i++) {
-            if (cpfSelect.options[i].value === cpf) {
-                cpfSelect.selectedIndex = i;
-                break;
-            }
-        }
-    });
-
-    cpfSelect.addEventListener('change', function () {
-        const selectedOption = cpfSelect.options[cpfSelect.selectedIndex];
-        const nome = selectedOption.getAttribute('data-nome');
-
-        for (let i = 0; i < nomeSelect.options.length; i++) {
-            if (nomeSelect.options[i].value === nome) {
-                nomeSelect.selectedIndex = i;
-                break;
-            }
-        }
-    });
 });
