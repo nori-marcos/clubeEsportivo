@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS atestados
     associado                varchar NOT NULL REFERENCES associados (cpf) ON DELETE CASCADE,
     data_emissao             date    NOT NULL,
     data_validade            date    NOT NULL,
-    emitido_pelo_funcionario varchar NOT NULL,
+    emitido_pelo_funcionario varchar,
     PRIMARY KEY (id_atestado, associado)
 );
 
