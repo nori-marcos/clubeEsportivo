@@ -14,6 +14,7 @@ from src.models.types import Titularidade, TipoDePlano, CPF, Telefone
 session = session_singleton
 check_and_create_database(session)
 
+
 class Gateway:
     @staticmethod
     def salvar_associado(associado: Associado):
@@ -47,43 +48,22 @@ class Gateway:
     @staticmethod
     def editar_associado(associado):
         try:
-            cpf = associado.cpf.cpf
-
-            sql_select = text("""
-            SELECT nome, data_nascimento, endereco, email, associado_titular, contrato, foto, data_adesao
-            FROM associados
-            WHERE cpf = :cpf
+            sql = text("""
+            CALL editar_contrato_associado_telefone(:cpf, :nome, :email, :plano,
+            :data_nascimento, :endereco, :foto, :telefones, :associado_titular)
             """)
 
-            result = session.execute(sql_select, {'cpf': cpf})
-
-            for row in result.mappings():
-                nome = associado.nome if associado.nome else row['nome']
-                data_nascimento = associado.data_nascimento if associado.data_nascimento else row['data_nascimento']
-                endereco = associado.endereco if associado.endereco else row['endereco']
-                email = associado.email if associado.email else row['email']
-                contrato = row['contrato']
-                foto = base64.b64decode(associado.foto) if associado.foto else None
-                data_adesao = row['data_adesao']
-                associado_titular = associado.associado_titular if associado.associado_titular is not None else None
-
-                sql_update = text("""
-                UPDATE associados
-                SET nome = :nome, data_nascimento = :data_nascimento, endereco = :endereco, email = :email, associado_titular = :associado_titular, contrato = :contrato, foto = :foto, data_adesao = :data_adesao
-                WHERE cpf = :cpf
-                """)
-
-                session.execute(sql_update, {
-                    'cpf': cpf,
-                    'nome': nome,
-                    'data_nascimento': data_nascimento,
-                    'endereco': endereco,
-                    'email': email,
-                    'associado_titular': associado_titular,
-                    'contrato': contrato,
-                    'foto': foto,
-                    'data_adesao': data_adesao
-                })
+            session.execute(sql, {
+                'cpf': associado.cpf.cpf,
+                'nome': associado.nome,
+                'email': associado.email,
+                'plano': associado.plano,
+                'data_nascimento': associado.data_nascimento,
+                'endereco': associado.endereco,
+                'foto': base64.b64decode(associado.foto) if associado.foto else None,
+                'telefones': [telefone.telefone for telefone in associado.telefones],
+                'associado_titular': associado.associado_titular if associado.associado_titular else None
+            })
             session.commit()
             return True, "Associado atualizado com sucesso!"
 
@@ -143,7 +123,8 @@ class Gateway:
                 foto_base64: str = base64.b64encode(foto_memoryview).decode('utf-8') if foto_memoryview else None
                 data_adesao: date = row['data_adesao']
                 telefones: List[Telefone] = [Telefone(dono=cpf, telefone=numero.strip()) for numero in
-                                             row['telefones'].split(', ')]
+                                             row['telefones'].split(', ')] if row['telefones'] else []
+                associado_titular = row['associado_titular']
                 associado = Associado(
                     cpf=cpf,
                     nome=nome,
@@ -154,7 +135,8 @@ class Gateway:
                     endereco=endereco,
                     foto=foto_base64,
                     data_adesao=data_adesao,
-                    telefones=telefones
+                    telefones=telefones,
+                    associado_titular=associado_titular
                 )
                 associados.append(associado)
             return associados
@@ -173,9 +155,7 @@ class Gateway:
             DELETE FROM associados
             WHERE cpf = :cpf
             """)
-            session.execute(sql, {
-                'cpf': cpf
-            })
+            session.execute(sql, {'cpf': cpf})
             session.commit()
             return True, "Associado removido com sucesso!"
         except SQLAlchemyError as e:

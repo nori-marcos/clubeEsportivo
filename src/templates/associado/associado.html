@@ -80,7 +80,7 @@
                                 </td>
                                 <td>{{ associado.nome }}</td>
                                 <td>{{ associado.email }}</td>
-                                <td>{{ associado.telefones[0].telefone }}</td>
+                                <td>{{ associado.telefones[0].telefone if associado.telefones}}</td>
                                 <td>{{ associado.data_adesao }}</td>
                                 <td>
                                     {% if associado.plano.value == 'OURO' %}

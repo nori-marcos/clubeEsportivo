@@ -178,9 +178,18 @@ VALUES ('02039461388', '2021-01-01', '2022-01-01', '43578019423'),
 
 -- Inserir pagamentos
 INSERT INTO pagamentos (data_vencimento, contrato, valor, data_pagamento)
-VALUES ('2021-01-01', 1, 100, '2021-01-01'),
-       ('2021-01-01', 2, 80, '2021-01-01'),
-       ('2021-01-01', 3, 60, '2021-01-01');
+VALUES
+    -- Pagamentos regulares
+    ('2021-01-01', 1, 100, '2021-01-01'),
+    ('2021-01-01', 2, 80, '2021-01-01'),
+    ('2021-01-01', 3, 60, '2021-01-01'),
+
+    -- Pagamento não realizado
+    ('2021-01-01', 4, 100, NULL),
+    -- Pagamento realizado após o vencimento
+    ('2021-01-01', 5, 80, '2021-03-01'),
+    -- Pagamento não realizado
+    ('2021-01-01', 6, 60, NULL);
 
 -- Inserir eventos
 INSERT INTO eventos (nome, data, descricao)

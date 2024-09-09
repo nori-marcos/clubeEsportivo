@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS pagamentos
     data_vencimento date           NOT NULL,
     contrato        integer        NOT NULL,
     valor           numeric(15, 2) NOT NULL,
-    data_pagamento  date           NOT NULL,
+    data_pagamento  date,
     PRIMARY KEY (data_vencimento, contrato)
 );
 
@@ -238,7 +238,7 @@ FROM (SELECT * FROM associados WHERE associado_titular IS NULL) AS titulares
                     ON (contratos.contrato = titulares.contrato);
 $$;
 
--- Procedimento para salvar um contrato associado com telefones
+-- Procedimento para salvar um contrato, um associado e seus telefones
 CREATE PROCEDURE salvar_contrato_associado_telefone(
     IN p_cpf varchar(11),
     IN p_nome varchar,
@@ -254,7 +254,7 @@ AS
 $$
 DECLARE
     v_contrato integer;
-    telefone  varchar(13);
+    telefone   varchar(13);
 BEGIN
     -- Primeiro, insere o contrato
     INSERT INTO contratos (data_inicio, data_termino, plano)
@@ -274,4 +274,74 @@ BEGIN
 END;
 $$;
 
+-- Procedimento para editar um contrato, um associado e seus telefones
+CREATE PROCEDURE editar_contrato_associado_telefone(
+    IN p_cpf varchar(11),
+    IN p_nome varchar,
+    IN p_email varchar,
+    IN p_plano varchar,
+    IN p_data_nascimento date,
+    IN p_endereco varchar,
+    IN p_foto bytea,
+    IN p_telefones text[],
+    IN p_associado_titular varchar(11))
+    LANGUAGE plpgsql
+AS
+$$
+DECLARE
+    telefone varchar(13);
+BEGIN
+    -- Primeiro, atualiza o contrato
+    UPDATE contratos
+    SET plano = p_plano
+    WHERE id_contrato = (SELECT contrato FROM associados WHERE cpf = p_cpf);
 
+    -- Depois, atualiza os dados do associado
+    IF p_nome IS NOT NULL THEN
+        UPDATE associados
+        SET nome = p_nome
+        WHERE cpf = p_cpf
+          AND nome IS DISTINCT FROM p_nome;
+    END IF;
+
+    IF p_email IS NOT NULL THEN
+        UPDATE associados
+        SET email = p_email
+        WHERE cpf = p_cpf
+          AND email IS DISTINCT FROM p_email;
+    END IF;
+
+    IF p_data_nascimento IS NOT NULL THEN
+        UPDATE associados
+        SET data_nascimento = p_data_nascimento
+        WHERE cpf = p_cpf
+          AND data_nascimento IS DISTINCT FROM p_data_nascimento;
+    END IF;
+
+    IF p_endereco IS NOT NULL THEN
+        UPDATE associados
+        SET endereco = p_endereco
+        WHERE cpf = p_cpf
+          AND endereco IS DISTINCT FROM p_endereco;
+    END IF;
+
+    IF p_foto IS NOT NULL THEN
+        UPDATE associados
+        SET foto = p_foto
+        WHERE cpf = p_cpf
+          AND foto IS DISTINCT FROM p_foto;
+    END IF;
+
+    UPDATE associados
+    SET associado_titular = p_associado_titular
+    WHERE cpf = p_cpf
+      AND associado_titular IS DISTINCT FROM p_associado_titular;
+
+    -- Por fim, atualiza os telefones em associados_telefones
+    DELETE FROM associados_telefones WHERE associado = p_cpf;
+    FOREACH telefone IN ARRAY p_telefones
+        LOOP
+            INSERT INTO associados_telefones (associado, telefone) VALUES (p_cpf, telefone);
+        END LOOP;
+END;
+$$

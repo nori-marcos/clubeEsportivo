@@ -94,14 +94,14 @@
                     <div class="form-group">
                         <label for="edit-telefone-{{ associado.cpf.cpf }}">Telefone 1:</label>
                         <input id="edit-telefone-{{ associado.cpf.cpf }}"
-                               type="text" class="form-control telefone-mask" name="telefone"
+                               type="text" class="form-control telefone-mask" name="telefone1"
                                value="{{ associado.telefones[0].telefone if associado.telefones else '' }}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="edit-telefone-{{ associado.cpf.cpf }}">Telefone2 :</label>
                         <input id="edit-telefone-{{ associado.cpf.cpf }}"
-                               type="text" class="form-control telefone-mask" name="telefone"
+                               type="text" class="form-control telefone-mask" name="telefone2"
                                value="{{ associado.telefones[1].telefone if associado.telefones and associado.telefones | length > 1 else '' }}">
                     </div>
 
