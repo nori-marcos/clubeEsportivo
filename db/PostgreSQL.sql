@@ -225,19 +225,6 @@ ALTER TABLE departamentos
 
 -------------------------------- PROCEDURES --------------------------------
 
-
-CREATE PROCEDURE associados_com_pagamentos_irregulares()
-    LANGUAGE sql AS
-$$
-SELECT titulares.cpf, titulares.nome, contratos.contrato, contratos.data_vencimento
-FROM (SELECT * FROM associados WHERE associado_titular IS NULL) AS titulares
-         inner join (SELECT contrato, data_vencimento
-                     FROM pagamentos
-                     WHERE (data_vencimento < data_pagamento)
-                        or (data_pagamento IS NULL)) AS contratos
-                    ON (contratos.contrato = titulares.contrato);
-$$;
-
 -- Procedimento para salvar um contrato, um associado e seus telefones
 CREATE PROCEDURE salvar_contrato_associado_telefone(
     IN p_cpf varchar(11),
@@ -344,4 +331,63 @@ BEGIN
             INSERT INTO associados_telefones (associado, telefone) VALUES (p_cpf, telefone);
         END LOOP;
 END;
+$$;
+
+-------------------------------- FUNCTION --------------------------------
+CREATE FUNCTION verificar_pagamento_status(p_cpf varchar(11))
+    RETURNS boolean
+    LANGUAGE plpgsql
+AS
 $$
+DECLARE
+    v_associado_titular varchar(11);
+    v_contrato          integer;
+    v_status            boolean;
+BEGIN
+    -- Verifica se o associado é dependente ou titular
+    SELECT associado_titular, contrato
+    INTO v_associado_titular, v_contrato
+    FROM associados
+    WHERE cpf = p_cpf;
+
+    -- Se for dependente, pegar o contrato do titular
+    IF v_associado_titular IS NOT NULL THEN
+        -- Dependente, verificar o pagamento do titular
+        SELECT contrato
+        INTO v_contrato
+        FROM associados
+        WHERE cpf = v_associado_titular;
+    END IF;
+
+    -- Lógica para verificar o status de pagamento
+    SELECT CASE
+               -- Caso 1: pagamento não realizado e ainda dentro do prazo de vencimento
+               WHEN data_pagamento IS NULL AND data_vencimento > CURRENT_DATE THEN FALSE
+
+               -- Caso 2: pagamento realizado e dentro do prazo de vencimento, status ativo
+               WHEN data_pagamento IS NOT NULL AND data_pagamento <= data_vencimento THEN TRUE
+
+               -- Caso 3: qualquer outro cenário, status suspenso
+               ELSE FALSE
+               END
+    INTO v_status
+    FROM pagamentos
+    WHERE contrato = v_contrato;
+
+    -- Retornar status (TRUE para ativo, FALSE para suspenso)
+    RETURN v_status;
+END;
+$$;
+
+-- REMOVER SCRIPTS DE PROCEDURES
+CREATE PROCEDURE associados_com_pagamentos_irregulares()
+    LANGUAGE sql AS
+$$
+SELECT titulares.cpf, titulares.nome, contratos.contrato, contratos.data_vencimento
+FROM (SELECT * FROM associados WHERE associado_titular IS NULL) AS titulares
+         inner join (SELECT contrato, data_vencimento
+                     FROM pagamentos
+                     WHERE (data_vencimento < data_pagamento)
+                        or (data_pagamento IS NULL)) AS contratos
+                    ON (contratos.contrato = titulares.contrato);
+$$;
