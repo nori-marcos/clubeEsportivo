@@ -15,7 +15,7 @@ session = session_singleton
 check_and_create_database(session)
 
 
-class Gateway:
+class Associado_Gateway:
     @staticmethod
     def salvar_associado(associado: Associado):
         try:
@@ -174,57 +174,5 @@ class Gateway:
             erro_original = getattr(e, 'orig', None)
             if erro_original:
                 raise CustomException(f"Erro ao remover o associado: {erro_original}")
-            else:
-                raise CustomException(f"Erro no banco de dados: {e}")
-
-    @staticmethod
-    def listar_pagamentos():
-        try:
-            sql = text("""
-            SELECT
-            p.id_pagamento,
-            a.cpf AS cpf_associado,
-            a.nome AS nome_associado,
-            p.data_vencimento,
-            p.data_pagamento,
-            p.valor,
-            p.tipo,
-            p.metodo,
-            p.descricao
-            FROM pagamentos p
-            LEFT JOIN associados a ON p.cpf_associado = a.cpf
-            ORDER BY p.data_vencimento
-            """)
-
-            result = session.execute(sql)
-            pagamentos = []
-            for row in result.mappings():
-                id_pagamento = row['id_pagamento']
-                cpf_associado = CPF(cpf=row['cpf_associado'])
-                nome_associado = row['nome_associado']
-                data_vencimento = row['data_vencimento']
-                data_pagamento = row['data_pagamento']
-                valor = row['valor']
-                tipo = row['tipo']
-                metodo = row['metodo']
-                descricao = row['descricao']
-                pagamento = {
-                    'id_pagamento': id_pagamento,
-                    'cpf_associado': cpf_associado,
-                    'nome_associado': nome_associado,
-                    'data_vencimento': data_vencimento,
-                    'data_pagamento': data_pagamento,
-                    'valor': valor,
-                    'tipo': tipo,
-                    'metodo': metodo,
-                    'descricao': descricao
-                }
-                pagamentos.append(pagamento)
-            return pagamentos
-        except SQLAlchemyError as e:
-            session.rollback()
-            erro_original = getattr(e, 'orig', None)
-            if erro_original:
-                raise CustomException(f"Erro ao listar os pagamentos: {erro_original}")
             else:
                 raise CustomException(f"Erro no banco de dados: {e}")

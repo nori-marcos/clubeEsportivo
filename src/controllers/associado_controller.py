@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import flash, render_template, redirect, url_for, request
 
-from src.gateway.gateway import Gateway
+from src.gateway.associado_gateway import Associado_Gateway
 from src.models.associado import Associado
 from src.models.types import CPF
 from src.utils.arquivo_utils import processar_foto
@@ -10,7 +10,7 @@ from src.utils.formulario_utils import extrair_dados_formulario, extrair_telefon
 
 
 def listar_associados():
-    return Gateway.listar_associados()
+    return Associado_Gateway.listar_associados()
 
 
 def inserir_associado():
@@ -33,7 +33,7 @@ def inserir_associado():
             associado_titular=request.form.get('associado_titular', None),
         )
 
-        sucesso, mensagem = Gateway.salvar_associado(associado)
+        sucesso, mensagem = Associado_Gateway.salvar_associado(associado)
 
         if sucesso:
             flash(mensagem, 'success')
@@ -41,7 +41,7 @@ def inserir_associado():
     except Exception as e:
         form_data_member = extrair_dados_formulario()
         flash(f'Ocorreu um erro ao adicionar o associado: {e}', 'danger-insert-member')
-        associados = Gateway.listar_associados()
+        associados = Associado_Gateway.listar_associados()
         pagamentos = [
             {
                 'id_pagamento': 1,
@@ -104,14 +104,14 @@ def editar_associado():
             associado_titular=request.form.get('associado_titular', None),
         )
 
-        sucesso, mensagem = Gateway.editar_associado(associado)
+        sucesso, mensagem = Associado_Gateway.editar_associado(associado)
         if sucesso:
             flash(mensagem, 'success')
             return redirect(url_for('main.index'))
     except Exception as e:
         form_data_member = extrair_dados_formulario()
         flash(f'Ocorreu um erro ao atualizar o associado: {e}', 'danger-edit-member')
-        associados = Gateway.listar_associados()
+        associados = Associado_Gateway.listar_associados()
         pagamentos = [
             {
                 'id_pagamento': 1,
@@ -147,7 +147,7 @@ def editar_associado():
 
 def remover_associado(cpf: CPF):
     try:
-        sucesso, mensagem = Gateway.remover_associado(cpf)
+        sucesso, mensagem = Associado_Gateway.remover_associado(cpf)
         if sucesso:
             flash(mensagem, 'success')
             return redirect(url_for('main.index'))

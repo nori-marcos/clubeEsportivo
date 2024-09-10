@@ -1,13 +1,28 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from flask import flash, redirect, url_for, render_template
 
-from src.gateway.gateway import Gateway
+from src.gateway.pagamento_gateway import Pagamento_Gateway
+from src.models.pagamento import Pagamento
 
+pagamentos_mock = [
+    {
+        'contrato': '2',
+        'data_vencimento': '2021-10-10',
+        'data_pagamento': '2021-10-10',
+        'valor': 100.0,
+    },
+    {
+        'contrato': '1',
+        'data_vencimento': '2021-10-10',
+        'data_pagamento': '2021-10-10',
+        'valor': 100.0,
+    }
+]
 
-# def listar_pagamentos():
-#     return Gateway.listar_pagamentos()
-
+def listar_pagamento(cpf, data):
+    pagamentos: list[Pagamento] = [Pagamento(**dado) for dado in Pagamento_Gateway.listar_pagamentos(cpf)]
+    return pagamentos
 
 def inserir_pagamento():
     try:
@@ -18,34 +33,10 @@ def inserir_pagamento():
     except Exception as e:
         form_data_member = {}
         flash(f'Ocorreu um erro ao adicionar o pagamento: {e}', 'danger-insert-payment')
-        associados = Gateway.listar_associados()
-        # pagamentos = Gateway.listar_pagamentos()
+        associados = Pagamento_Gateway.listar_associados()
+        # pagamentos = Pagamento_Gateway.listar_pagamentos()
 
-        # mock
-        pagamentos = [
-            {
-                'id_pagamento': 1,
-                'cpf_associado': '123.456.789-00',
-                'nome_associado': 'Fulano de Tal',
-                'data_vencimento': '2021-10-10',
-                'data_pagamento': '2021-10-10',
-                'valor': 100.0,
-                'tipo': 'Mensalidade',
-                'metodo': 'Pix',
-                'descricao': 'Pagamento da mensalidade de outubro'
-            },
-            {
-                'id_pagamento': 2,
-                'cpf_associado': '123.456.789-00',
-                'nome_associado': 'Fulano de Tal',
-                'data_vencimento': '2021-10-10',
-                'data_pagamento': '2021-10-10',
-                'valor': 100.0,
-                'tipo': 'Mensalidade',
-                'metodo': 'Pix',
-                'descricao': 'Pagamento da mensalidade de outubro'
-            }
-        ]
+        pagamentos = pagamentos_mock
 
         today = datetime.today()
         return render_template('index.html',
@@ -56,43 +47,21 @@ def inserir_pagamento():
                                form_data_payment={})
 
 
-def editar_pagamento():
+def editar_pagamento(cpf, data: date):
+    pagamento = listar_pagamento(cpf, data)[0]
+
     try:
-        sucesso, mensagem = True, "Pagamento atualizado com sucesso"
+        sucesso, mensagem = Pagamento_Gateway.editar_pagamento(pagamento)
         if sucesso:
             flash(mensagem, 'success')
             return redirect(url_for('main.index'))
     except Exception as e:
         form_data_member = {}
         flash(f'Ocorreu um erro ao atualizar o pagamento: {e}', 'danger-edit-payment')
-        associados = Gateway.listar_associados()
-        # pagamentos = Gateway.listar_pagamentos()
+        associados = Pagamento_Gateway.listar_associados()
+        # pagamentos = Pagamento_Gateway.listar_pagamentos()
+        pagamentos = pagamentos_mock
 
-        # mock
-        pagamentos = [
-            {
-                'id_pagamento': 1,
-                'cpf_associado': '123.456.789-00',
-                'nome_associado': 'Fulano de Tal',
-                'data_vencimento': '2021-10-10',
-                'data_pagamento': '2021-10-10',
-                'valor': 100.0,
-                'tipo': 'Mensalidade',
-                'metodo': 'Pix',
-                'descricao': 'Pagamento da mensalidade de outubro'
-            },
-            {
-                'id_pagamento': 2,
-                'cpf_associado': '123.456.789-00',
-                'nome_associado': 'Fulano de Tal',
-                'data_vencimento': '2021-10-10',
-                'data_pagamento': '2021-10-10',
-                'valor': 100.0,
-                'tipo': 'Mensalidade',
-                'metodo': 'Pix',
-                'descricao': 'Pagamento da mensalidade de outubro'
-            }
-        ]
 
         today = datetime.today()
         return render_template('index.html',
@@ -103,7 +72,7 @@ def editar_pagamento():
                                form_data_payment={})
 
 
-def remover_pagamento(id_pagamento):
+def remover_pagamento(pagamento:):
     try:
         sucesso, mensagem = True, "Pagamento removido com sucesso"
         if sucesso:

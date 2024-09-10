@@ -153,7 +153,7 @@ O Projeto com seus vários módulos possui um padrão de arquitetura baseada em 
 - A `View` é a camada de apresentação, que exibe os dados ao usuário e envia as requisições para a camada de controle.
 - A `Controller` é a camada de controle, que recebe as requisições do usuário, cria instâncias de `Model` e chama os
   métodos da interface com o banco de dados.
-- `Gateway` funciona como Data Access Object (DAO), abstraindo o acesso ao banco de dados.
+- `Associado_Gateway` funciona como Data Access Object (DAO), abstraindo o acesso ao banco de dados.
 - `Banco de Dados` é a camada de persistência, que armazena os dados.
 
 A comunicação entre as camadas é feita por meio de mensagens, que são enviadas e recebidas por objetos. Abaixo, segue o
@@ -164,10 +164,10 @@ diagrama da camada de mapeamento para a tabela `associados` em casos de sucesso:
 ```mermaid
 sequenceDiagram
     View ->> Controller: input usuário
-    Controller ->> Gateway: instância Model
-    Gateway ->> Banco de Dados: comando SQL
-    Banco de Dados -->> Gateway: sucesso
-    Gateway -->> Controller: sucesso
+    Controller ->> Associado_Gateway: instância Model
+    Associado_Gateway ->> Banco de Dados: comando SQL
+    Banco de Dados -->> Associado_Gateway: sucesso
+    Associado_Gateway -->> Controller: sucesso
     Controller -->> View: renderizar sucesso
 ```
 
@@ -176,10 +176,10 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     View ->> Controller: input usuário
-    Controller ->> Gateway: instância Model
-    Gateway ->> Banco de Dados: comando SQL
-    Banco de Dados -->> Gateway: sucesso
-    Gateway -->> Controller: sucesso
+    Controller ->> Associado_Gateway: instância Model
+    Associado_Gateway ->> Banco de Dados: comando SQL
+    Banco de Dados -->> Associado_Gateway: sucesso
+    Associado_Gateway -->> Controller: sucesso
     Controller -->> View: renderizar sucesso
 ```
 
@@ -188,10 +188,10 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     View ->> Controller: requisição
-    Controller ->> Gateway: buscar dados
-    Gateway ->> Banco de Dados: comando SQL
-    Banco de Dados -->> Gateway: resultado
-    Gateway -->> Controller: instância Model
+    Controller ->> Associado_Gateway: buscar dados
+    Associado_Gateway ->> Banco de Dados: comando SQL
+    Banco de Dados -->> Associado_Gateway: resultado
+    Associado_Gateway -->> Controller: instância Model
     Controller -->> View: renderizar instância
 ```
 
@@ -200,9 +200,9 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     View ->> Controller: input (ID)
-    Controller ->> Gateway: deletar com ID
-    Gateway ->> Banco de Dados: comando SQL
-    Banco de Dados -->> Gateway: sucesso
-    Gateway -->> Controller: sucesso
+    Controller ->> Associado_Gateway: deletar com ID
+    Associado_Gateway ->> Banco de Dados: comando SQL
+    Banco de Dados -->> Associado_Gateway: sucesso
+    Associado_Gateway -->> Controller: sucesso
     Controller -->> View: renderizar sucesso
 ```
