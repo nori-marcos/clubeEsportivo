@@ -104,6 +104,7 @@ O Projeto com seus vários módulos possui um padrão de arquitetura baseada em 
 A comunicação entre as camadas é feita por meio de mensagens, que são enviadas e recebidas por objetos. Abaixo, segue o diagrama da camada de mapeamento para a tabela `associados` em casos de sucesso:
 
 ## Fluxo de escrita de dados
+
 ```mermaid
 sequenceDiagram
     View ->> Controller: input usuário
