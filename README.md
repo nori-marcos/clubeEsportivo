@@ -35,7 +35,7 @@ sudo -iu postgres psql
 
 ```postgresql
 CREATE ROLE clube_dba with PASSWORD '1234567' CREATEDB LOGIN;
-CREATE DATABASE db_cluve_esportivo with OWNER clube_dba;
+CREATE DATABASE db_clube_esportivo with OWNER clube_dba;
 ```
 
 ### Configurando o Ambiente Virtual

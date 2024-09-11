@@ -402,3 +402,20 @@ BEGIN
     RETURN v_status;
 END;
 $$;
+
+------------------------------------------------- View -------------------------------------------------
+
+CREATE VIEW associados_com_pagamento_pendente AS
+    SELECT
+    a.cpf AS cpf_associado,
+    a.nome AS nome_associado,
+    a.contrato,
+    p.data_vencimento,
+    p.data_pagamento,
+    p.valor
+    FROM pagamentos p
+    LEFT JOIN associados a ON p.contrato = a.contrato
+    LEFT JOIN contratos c ON c.id_contrato = a.contrato
+    WHERE (p.data_pagamento IS NULL OR (
+          p.data_vencimento >= p.data_pagamento)) AND (
+          c.data_termino >= now())
